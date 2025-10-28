@@ -21,14 +21,20 @@ export async function createTestUser(overrides?: {
 
   const userId = result.rows[0].user_id;
 
-  // Update settings if needed
+  // Update settings if needed (must use transaction with GUC for RLS)
   if (overrides?.timezone || overrides?.defaultDeadlineDays) {
-    await db.execute(sql`
-      UPDATE user_settings
-      SET timezone = ${overrides.timezone || 'UTC'},
-          default_deadline_days = ${overrides.defaultDeadlineDays || 30}
-      WHERE user_id = ${userId}
-    `);
+    await db.transaction(async (tx) => {
+      // Set GUC for RLS
+      await tx.execute(sql.raw(`SET LOCAL app.user_id = '${userId}'`));
+
+      // Now update settings
+      await tx.execute(sql`
+        UPDATE user_settings
+        SET timezone = ${overrides.timezone || 'UTC'},
+            default_deadline_days = ${overrides.defaultDeadlineDays || 30}
+        WHERE user_id = ${userId}
+      `);
+    });
   }
 
   return { userId, email, name };
