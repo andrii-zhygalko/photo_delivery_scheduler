@@ -56,3 +56,37 @@ export function isValidTimezone(timezone: string): boolean {
     return false;
   }
 }
+
+/**
+ * Returns a list of common timezones for UI picker.
+ * Used in Settings page to allow users to select their timezone.
+ */
+export function getCommonTimezones(): Array<{ value: string; label: string }> {
+  return [
+    { value: 'America/New_York', label: 'Eastern Time (US & Canada)' },
+    { value: 'America/Chicago', label: 'Central Time (US & Canada)' },
+    { value: 'America/Denver', label: 'Mountain Time (US & Canada)' },
+    {
+      value: 'America/Los_Angeles',
+      label: 'Pacific Time (US & Canada)',
+    },
+    { value: 'America/Phoenix', label: 'Arizona (MST - no DST)' },
+    { value: 'America/Anchorage', label: 'Alaska Time' },
+    { value: 'Pacific/Honolulu', label: 'Hawaii Time (no DST)' },
+    { value: 'Europe/London', label: 'London (GMT/BST)' },
+    { value: 'Europe/Paris', label: 'Paris, Berlin, Rome (CET/CEST)' },
+    { value: 'Europe/Rome', label: 'Rome (CET/CEST)' },
+    { value: 'Europe/Madrid', label: 'Madrid (CET/CEST)' },
+    { value: 'Europe/Athens', label: 'Athens (EET/EEST)' },
+    { value: 'Asia/Dubai', label: 'Dubai (GST - no DST)' },
+    { value: 'Asia/Tokyo', label: 'Tokyo (JST - no DST)' },
+    { value: 'Asia/Shanghai', label: 'Shanghai (CST - no DST)' },
+    { value: 'Asia/Hong_Kong', label: 'Hong Kong (HKT - no DST)' },
+    { value: 'Asia/Singapore', label: 'Singapore (SGT - no DST)' },
+    { value: 'Australia/Sydney', label: 'Sydney (AEST/AEDT)' },
+    { value: 'Australia/Melbourne', label: 'Melbourne (AEST/AEDT)' },
+    { value: 'Australia/Perth', label: 'Perth (AWST - no DST)' },
+    { value: 'Pacific/Auckland', label: 'Auckland (NZST/NZDT)' },
+    { value: 'UTC', label: 'Coordinated Universal Time (UTC)' },
+  ];
+}
