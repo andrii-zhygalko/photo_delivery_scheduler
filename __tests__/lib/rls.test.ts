@@ -10,9 +10,10 @@ describe('Row-Level Security (RLS) Policies', () => {
   let user2ItemIds: string[];
 
   beforeAll(async () => {
-    // Create two test users
-    user1 = await createTestUser({ email: 'user1@test.com' });
-    user2 = await createTestUser({ email: 'user2@test.com' });
+    // Create two test users with unique emails to prevent data pollution
+    const timestamp = Date.now();
+    user1 = await createTestUser({ email: `user1-${timestamp}@test.com` });
+    user2 = await createTestUser({ email: `user2-${timestamp}@test.com` });
 
     // Create items for each user (must set GUC first, use sql.raw for SET commands)
     await db.transaction(async (tx) => {

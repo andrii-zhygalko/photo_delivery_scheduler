@@ -8,6 +8,20 @@
       "when": 1760368267853,
       "tag": "0000_smiling_slipstream",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1760368267854,
+      "tag": "0001_auth_user_upsert",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1760368267855,
+      "tag": "0002_deadline_trigger",
+      "breakpoints": true
     }
   ]
 }
