@@ -7,22 +7,41 @@ import type { DeliveryItem } from '@/lib/db/schema';
 interface ItemsListProps {
   items: DeliveryItem[];
   userTimezone: string;
+  onEdit?: (item: DeliveryItem) => void;
+  onDeliver?: (item: DeliveryItem) => void;
+  onArchive?: (item: DeliveryItem) => void;
 }
 
-export function ItemsList({ items, userTimezone }: ItemsListProps) {
+export function ItemsList({
+  items,
+  userTimezone,
+  onEdit,
+  onDeliver,
+  onArchive,
+}: ItemsListProps) {
   const handleEdit = (item: DeliveryItem) => {
-    // TODO: Phase 6 - Open edit dialog
-    console.log('Edit item:', item.id);
+    if (onEdit) {
+      onEdit(item);
+    } else {
+      // Fallback for when called without handler
+      console.log('Edit item:', item.id);
+    }
   };
 
   const handleDeliver = (item: DeliveryItem) => {
-    // TODO: Phase 7 - Deliver action
-    console.log('Deliver item:', item.id);
+    if (onDeliver) {
+      onDeliver(item);
+    } else {
+      console.log('Deliver item:', item.id);
+    }
   };
 
   const handleArchive = (item: DeliveryItem) => {
-    // TODO: Phase 7 - Archive action
-    console.log('Archive item:', item.id);
+    if (onArchive) {
+      onArchive(item);
+    } else {
+      console.log('Archive item:', item.id);
+    }
   };
 
   if (items.length === 0) {
