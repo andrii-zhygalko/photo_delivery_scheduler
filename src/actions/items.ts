@@ -151,3 +151,127 @@ export async function updateItemAction(
     return { success: false, error: 'Failed to update item' };
   }
 }
+
+/**
+ * Mark an item as delivered
+ * Server Action called from quick action button
+ */
+export async function deliverItemAction(
+  itemId: string
+): Promise<ActionResult> {
+  try {
+    // 1. Check authentication
+    const session = await getServerSession();
+    if (!session?.user?.id) {
+      return { success: false, error: 'You must be signed in' };
+    }
+
+    const userId = session.user.id;
+
+    // 2. Update with RLS context
+    await db.transaction(async (tx) => {
+      await tx.execute(sql.raw(`SET LOCAL app.user_id = '${userId}'`));
+
+      await tx
+        .update(deliveryItems)
+        .set({
+          status: 'DELIVERED',
+          delivered_at: new Date(),
+          updated_at: new Date(),
+        })
+        .where(eq(deliveryItems.id, itemId));
+    });
+
+    // 3. Revalidate pages
+    revalidatePath('/items');
+    revalidatePath('/archived');
+
+    return { success: true, data: undefined };
+  } catch (error) {
+    console.error('Deliver item error:', error);
+    if (error instanceof Error) {
+      return { success: false, error: error.message };
+    }
+    return { success: false, error: 'Failed to mark item as delivered' };
+  }
+}
+
+/**
+ * Archive an item
+ * Server Action called from quick action button
+ */
+export async function archiveItemAction(
+  itemId: string
+): Promise<ActionResult> {
+  try {
+    // 1. Check authentication
+    const session = await getServerSession();
+    if (!session?.user?.id) {
+      return { success: false, error: 'You must be signed in' };
+    }
+
+    const userId = session.user.id;
+
+    // 2. Update with RLS context
+    await db.transaction(async (tx) => {
+      await tx.execute(sql.raw(`SET LOCAL app.user_id = '${userId}'`));
+
+      await tx
+        .update(deliveryItems)
+        .set({
+          status: 'ARCHIVED',
+          updated_at: new Date(),
+        })
+        .where(eq(deliveryItems.id, itemId));
+    });
+
+    // 3. Revalidate pages
+    revalidatePath('/items');
+    revalidatePath('/archived');
+
+    return { success: true, data: undefined };
+  } catch (error) {
+    console.error('Archive item error:', error);
+    if (error instanceof Error) {
+      return { success: false, error: error.message };
+    }
+    return { success: false, error: 'Failed to archive item' };
+  }
+}
+
+/**
+ * Delete an item permanently
+ * Server Action called from quick action button
+ */
+export async function deleteItemAction(
+  itemId: string
+): Promise<ActionResult> {
+  try {
+    // 1. Check authentication
+    const session = await getServerSession();
+    if (!session?.user?.id) {
+      return { success: false, error: 'You must be signed in' };
+    }
+
+    const userId = session.user.id;
+
+    // 2. Delete with RLS context
+    await db.transaction(async (tx) => {
+      await tx.execute(sql.raw(`SET LOCAL app.user_id = '${userId}'`));
+
+      await tx.delete(deliveryItems).where(eq(deliveryItems.id, itemId));
+    });
+
+    // 3. Revalidate pages
+    revalidatePath('/items');
+    revalidatePath('/archived');
+
+    return { success: true, data: undefined };
+  } catch (error) {
+    console.error('Delete item error:', error);
+    if (error instanceof Error) {
+      return { success: false, error: error.message };
+    }
+    return { success: false, error: 'Failed to delete item' };
+  }
+}
