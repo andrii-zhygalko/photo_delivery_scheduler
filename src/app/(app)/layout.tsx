@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
 import { getServerSession } from '@/lib/auth/session';
+import { Navbar } from '@/components/navbar';
 
 export default async function AppLayout({
   children,
@@ -8,9 +9,14 @@ export default async function AppLayout({
 }) {
   const session = await getServerSession();
 
-  if (!session) {
+  if (!session?.user) {
     redirect('/auth/signin');
   }
 
-  return <div>{children}</div>;
+  return (
+    <div className="min-h-screen flex flex-col">
+      <Navbar user={session.user} />
+      <main className="flex-1 bg-gradient-page">{children}</main>
+    </div>
+  );
 }

@@ -9,12 +9,17 @@ if (!process.env.NEON_DATABASE_URL) {
 
 /**
  * Database client that adapts based on environment:
- * - TEST: Uses WebSocket driver (Pool) for transaction support (needed for RLS tests)
- * - PRODUCTION/DEV: Uses HTTP driver for serverless compatibility (faster, no persistent connections)
+ * - TEST/DEVELOPMENT: Uses WebSocket driver (Pool) for transaction support (needed for RLS)
+ * - PRODUCTION: Uses HTTP driver for serverless compatibility (faster, no persistent connections)
+ *
+ * Why? The HTTP driver doesn't support transactions, which are required for setting
+ * the app.user_id GUC that enables Row-Level Security policies.
  */
-const isTest = process.env.NODE_ENV === 'test';
+const useTransactionDriver =
+  process.env.NODE_ENV === 'test' ||
+  process.env.NODE_ENV === 'development';
 
-export const db = isTest
+export const db = useTransactionDriver
   ? drizzleWs(new Pool({ connectionString: process.env.NEON_DATABASE_URL }), {
       schema,
     })
