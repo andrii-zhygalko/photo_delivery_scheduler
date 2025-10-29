@@ -56,3 +56,21 @@ export const itemFormSchema = z
   });
 
 export type ItemFormData = z.infer<typeof itemFormSchema>;
+
+/**
+ * Form schema for user settings
+ * Used for client-side validation in React Hook Form
+ */
+export const settingsFormSchema = z.object({
+  default_deadline_days: z
+    .number()
+    .int('Must be a whole number')
+    .min(1, 'Minimum 1 day')
+    .max(365, 'Maximum 365 days'),
+
+  timezone: z.string().min(1, 'Timezone is required'),
+
+  applyToExisting: z.boolean(),
+});
+
+export type SettingsFormData = z.infer<typeof settingsFormSchema>;
