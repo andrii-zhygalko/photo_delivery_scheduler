@@ -2,9 +2,8 @@ import { redirect } from 'next/navigation';
 import { getServerSession } from '@/lib/auth/session';
 import { db } from '@/lib/db';
 import { getUserSettings, getItemsForUser } from '@/lib/db/queries';
-import { ItemsList } from '@/components/items-list';
 import { ItemsFilter } from '@/components/items-filter';
-import { Button } from '@/components/ui/button';
+import { ItemsPageClient } from '@/components/items-page-client';
 import { sql } from 'drizzle-orm';
 import type { DeliveryItem } from '@/lib/db/schema';
 
@@ -69,18 +68,8 @@ export default async function ItemsPage(props: ItemsPageProps) {
 
   return (
     <div className="container py-8">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-        <div>
-          <h1 className="text-3xl font-bold mb-1">Delivery Items</h1>
-          <p className="text-sm text-muted-foreground">
-            {items.length} {items.length === 1 ? 'item' : 'items'}
-          </p>
-        </div>
-        <Button>+ New Item</Button>
-      </div>
-
+      <ItemsPageClient items={items} userSettings={userSettings} />
       <ItemsFilter />
-      <ItemsList items={items} userTimezone={userSettings.timezone} />
     </div>
   );
 }
