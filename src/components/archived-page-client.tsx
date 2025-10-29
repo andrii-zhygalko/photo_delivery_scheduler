@@ -3,19 +3,21 @@
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { Button } from '@/components/ui/button';
 import { ItemsList } from '@/components/items-list';
 import { ItemDialog } from '@/components/item-dialog';
 import { ConfirmDialog } from '@/components/confirm-dialog';
-import { deliverItemAction, archiveItemAction, deleteItemAction } from '@/actions/items';
+import { deleteItemAction } from '@/actions/items';
 import type { DeliveryItem, UserSettings } from '@/lib/db/schema';
 
-interface ItemsPageClientProps {
+interface ArchivedPageClientProps {
   items: DeliveryItem[];
   userSettings: UserSettings;
 }
 
-export function ItemsPageClient({ items, userSettings }: ItemsPageClientProps) {
+export function ArchivedPageClient({
+  items,
+  userSettings,
+}: ArchivedPageClientProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -36,48 +38,9 @@ export function ItemsPageClient({ items, userSettings }: ItemsPageClientProps) {
     onConfirm: () => {},
   });
 
-  const handleNewItem = () => {
-    setSelectedItem(undefined);
-    setDialogOpen(true);
-  };
-
   const handleEdit = (item: DeliveryItem) => {
     setSelectedItem(item);
     setDialogOpen(true);
-  };
-
-  const handleDeliver = async (item: DeliveryItem) => {
-    startTransition(async () => {
-      const result = await deliverItemAction(item.id);
-      if (result.success) {
-        toast.success('Item marked as delivered!');
-        router.refresh();
-      } else {
-        toast.error(result.error || 'Failed to mark item as delivered');
-      }
-    });
-  };
-
-  const handleArchive = async (item: DeliveryItem) => {
-    setConfirmDialog({
-      open: true,
-      title: 'Archive Item?',
-      description: `Are you sure you want to archive "${item.client_name}"? You can find it in the Archived tab.`,
-      confirmText: 'Archive',
-      variant: 'default',
-      onConfirm: () => {
-        setConfirmDialog((prev) => ({ ...prev, open: false }));
-        startTransition(async () => {
-          const result = await archiveItemAction(item.id);
-          if (result.success) {
-            toast.success('Item archived');
-            router.refresh();
-          } else {
-            toast.error(result.error || 'Failed to archive item');
-          }
-        });
-      },
-    });
   };
 
   const handleDelete = async (item: DeliveryItem) => {
@@ -104,22 +67,17 @@ export function ItemsPageClient({ items, userSettings }: ItemsPageClientProps) {
 
   return (
     <>
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-        <div>
-          <h1 className="text-3xl font-bold mb-1">Delivery Items</h1>
-          <p className="text-sm text-muted-foreground">
-            {items.length} {items.length === 1 ? 'item' : 'items'}
-          </p>
-        </div>
-        <Button onClick={handleNewItem}>+ New Item</Button>
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold mb-1">Archived Items</h1>
+        <p className="text-sm text-muted-foreground">
+          {items.length} archived {items.length === 1 ? 'item' : 'items'}
+        </p>
       </div>
 
       <ItemsList
         items={items}
         userTimezone={userSettings.timezone}
         onEdit={handleEdit}
-        onDeliver={handleDeliver}
-        onArchive={handleArchive}
         onDelete={handleDelete}
       />
 

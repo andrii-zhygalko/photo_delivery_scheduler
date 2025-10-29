@@ -10,6 +10,7 @@ interface ItemsListProps {
   onEdit?: (item: DeliveryItem) => void;
   onDeliver?: (item: DeliveryItem) => void;
   onArchive?: (item: DeliveryItem) => void;
+  onDelete?: (item: DeliveryItem) => void;
 }
 
 export function ItemsList({
@@ -18,6 +19,7 @@ export function ItemsList({
   onEdit,
   onDeliver,
   onArchive,
+  onDelete,
 }: ItemsListProps) {
   const handleEdit = (item: DeliveryItem) => {
     if (onEdit) {
@@ -44,6 +46,14 @@ export function ItemsList({
     }
   };
 
+  const handleDelete = (item: DeliveryItem) => {
+    if (onDelete) {
+      onDelete(item);
+    } else {
+      console.log('Delete item:', item.id);
+    }
+  };
+
   if (items.length === 0) {
     return (
       <EmptyState
@@ -63,6 +73,7 @@ export function ItemsList({
           onEdit={handleEdit}
           onDeliver={handleDeliver}
           onArchive={handleArchive}
+          onDelete={handleDelete}
         />
       ))}
     </div>

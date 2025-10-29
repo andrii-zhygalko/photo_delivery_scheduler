@@ -6,7 +6,7 @@ import { StatusPill } from '@/components/status-pill';
 import { DeadlineBadge } from '@/components/deadline-badge';
 import { formatDeadline, formatShortDate } from '@/lib/date-utils';
 import type { DeliveryItem } from '@/lib/db/schema';
-import { CalendarIcon, Edit2Icon, CheckCircle2Icon, ArchiveIcon } from 'lucide-react';
+import { CalendarIcon, Edit2Icon, CheckCircle2Icon, ArchiveIcon, Trash2Icon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface ItemCardProps {
@@ -15,6 +15,7 @@ interface ItemCardProps {
   onEdit?: (item: DeliveryItem) => void;
   onDeliver?: (item: DeliveryItem) => void;
   onArchive?: (item: DeliveryItem) => void;
+  onDelete?: (item: DeliveryItem) => void;
   className?: string;
 }
 
@@ -34,6 +35,7 @@ export function ItemCard({
   onEdit,
   onDeliver,
   onArchive,
+  onDelete,
   className,
 }: ItemCardProps) {
   const formattedShootDate = formatShortDate(item.shoot_date, userTimezone);
@@ -123,6 +125,17 @@ export function ItemCard({
             >
               <Edit2Icon className="h-4 w-4" />
               Edit
+            </Button>
+          )}
+
+          {onDelete && (
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => onDelete(item)}
+              className="flex items-center gap-1 text-destructive hover:text-destructive hover:bg-destructive/10"
+            >
+              <Trash2Icon className="h-4 w-4" />
             </Button>
           )}
         </CardFooter>
