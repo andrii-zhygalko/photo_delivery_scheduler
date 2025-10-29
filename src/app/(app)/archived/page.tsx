@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 import { getServerSession } from '@/lib/auth/session';
 import { db } from '@/lib/db';
 import { getUserSettings, getItemsForUser } from '@/lib/db/queries';
-import { ItemsList } from '@/components/items-list';
+import { ArchivedPageClient } from '@/components/archived-page-client';
 import { sql } from 'drizzle-orm';
 
 interface ArchivedPageProps {
@@ -51,14 +51,7 @@ export default async function ArchivedPage(props: ArchivedPageProps) {
 
   return (
     <div className="container py-8">
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold mb-1">Archived Items</h1>
-        <p className="text-sm text-muted-foreground">
-          {items.length} archived {items.length === 1 ? 'item' : 'items'}
-        </p>
-      </div>
-
-      <ItemsList items={items} userTimezone={userSettings.timezone} />
+      <ArchivedPageClient items={items} userSettings={userSettings} />
     </div>
   );
 }
