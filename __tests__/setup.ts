@@ -41,13 +41,15 @@ beforeAll(async () => {
          OR email LIKE 'test-%@example.com'
          OR email LIKE '%integration%@test.com'
          OR email LIKE '%no-items%@test.com'
+         OR email LIKE '%actions-user%@test.com'
+         OR email LIKE '%settings-user%@test.com'
     `);
     const duration = Date.now() - startTime;
     console.log(`Cleaned up leftover test data (${duration}ms)`);
   } catch (err) {
     console.warn('Failed to clean up test data (this is OK if database is empty):', err);
   }
-}, 90000); // Increase timeout to 90s for the global cleanup hook
+}, 120000); // Increase timeout to 120s for the global cleanup hook
 
 afterAll(async () => {
   // Global teardown if needed
