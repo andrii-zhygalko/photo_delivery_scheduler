@@ -148,7 +148,11 @@ export function SettingsForm({
 
         {/* Warning when applyToExisting is checked */}
         {applyToExisting && itemCount > 0 && (
-          <div className="rounded-md bg-orange-50 dark:bg-orange-950 border border-orange-200 dark:border-orange-800 p-4">
+          <div
+            role="alert"
+            aria-live="polite"
+            className="rounded-md bg-orange-50 dark:bg-orange-950 border border-orange-200 dark:border-orange-800 p-4"
+          >
             <p className="text-sm text-orange-800 dark:text-orange-200">
               <strong>Warning:</strong> This will recalculate {itemCount} item
               {itemCount !== 1 ? 's' : ''} and reset all custom deadlines to the new
