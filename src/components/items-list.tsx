@@ -2,11 +2,13 @@
 
 import { ItemCard } from '@/components/item-card';
 import { EmptyState } from '@/components/empty-state';
+import { SkeletonGrid } from '@/components/skeleton-grid';
 import type { DeliveryItem } from '@/lib/db/schema';
 
 interface ItemsListProps {
   items: DeliveryItem[];
   userTimezone: string;
+  isLoading?: boolean; // Show skeleton grid when loading
   onEdit?: (item: DeliveryItem) => void;
   onDeliver?: (item: DeliveryItem) => void;
   onArchive?: (item: DeliveryItem) => void;
@@ -16,6 +18,7 @@ interface ItemsListProps {
 export function ItemsList({
   items,
   userTimezone,
+  isLoading = false,
   onEdit,
   onDeliver,
   onArchive,
@@ -53,6 +56,11 @@ export function ItemsList({
       console.log('Delete item:', item.id);
     }
   };
+
+  // Show skeleton while loading
+  if (isLoading) {
+    return <SkeletonGrid count={6} />;
+  }
 
   if (items.length === 0) {
     return (
