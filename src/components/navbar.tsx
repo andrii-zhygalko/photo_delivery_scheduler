@@ -49,7 +49,10 @@ export function Navbar({ user }: NavbarProps) {
   };
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <nav
+      aria-label="Main navigation"
+      className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+    >
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-6">
           <Link href="/items" className="text-lg font-semibold">
@@ -67,6 +70,7 @@ export function Navbar({ user }: NavbarProps) {
                     ? 'text-foreground'
                     : 'text-muted-foreground'
                 )}
+                aria-current={isActive(link.href) ? 'page' : undefined}
               >
                 {link.label}
               </Link>
@@ -76,13 +80,18 @@ export function Navbar({ user }: NavbarProps) {
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="rounded-full focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
+            <button
+              className="rounded-full focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+              aria-label="User menu"
+            >
               <Avatar>
                 <AvatarImage
                   src={user.image || undefined}
-                  alt={user.name || 'User'}
+                  alt={`${user.name || user.email || 'User'}'s profile picture`}
                 />
-                <AvatarFallback>{getInitials()}</AvatarFallback>
+                <AvatarFallback aria-label={`${user.name || user.email || 'User'} (initials)`}>
+                  {getInitials()}
+                </AvatarFallback>
               </Avatar>
             </button>
           </DropdownMenuTrigger>
