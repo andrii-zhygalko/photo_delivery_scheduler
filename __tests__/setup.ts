@@ -32,7 +32,9 @@ beforeAll(async () => {
 
   // Clean up any leftover test data from interrupted test runs
   // This prevents data pollution between test runs
+  // Note: This cleanup can be slow if there's a lot of test data
   try {
+    const startTime = Date.now();
     await db.execute(sql`
       DELETE FROM users
       WHERE email LIKE 'user%@test.com'
@@ -40,11 +42,12 @@ beforeAll(async () => {
          OR email LIKE '%integration%@test.com'
          OR email LIKE '%no-items%@test.com'
     `);
-    console.log('Cleaned up leftover test data');
+    const duration = Date.now() - startTime;
+    console.log(`Cleaned up leftover test data (${duration}ms)`);
   } catch (err) {
     console.warn('Failed to clean up test data (this is OK if database is empty):', err);
   }
-});
+}, 90000); // Increase timeout to 90s for the global cleanup hook
 
 afterAll(async () => {
   // Global teardown if needed
