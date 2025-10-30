@@ -1,13 +1,11 @@
 import { defineConfig } from 'vitest/config';
 import path from 'path';
 import { loadEnvConfig } from '@next/env';
-import { VitestReporter } from 'tdd-guard-vitest';
 
 loadEnvConfig(process.cwd());
 
 export default defineConfig({
   test: {
-    reporters: ['default', new VitestReporter()],
     globals: true,
     environment: 'node',
     setupFiles: ['__tests__/setup.ts'],
@@ -17,6 +15,8 @@ export default defineConfig({
     },
     // Disable file parallelism to prevent race conditions during global cleanup
     fileParallelism: false,
+    // Increase hook timeout for global cleanup (deletes all test users, can take 30-60s with multiple files)
+    hookTimeout: 60000,
     server: {
       deps: {
         inline: ['next'],
