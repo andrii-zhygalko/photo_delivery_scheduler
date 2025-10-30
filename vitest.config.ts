@@ -15,8 +15,8 @@ export default defineConfig({
     },
     // Disable file parallelism to prevent race conditions during global cleanup
     fileParallelism: false,
-    // Increase hook timeout for global cleanup (deletes all test users, can take 30-60s with multiple files)
-    hookTimeout: 60000,
+    // Increase hook timeout for global cleanup (deletes all test users, can take 60-120s with multiple files)
+    hookTimeout: 120000,
     server: {
       deps: {
         inline: ['next'],
