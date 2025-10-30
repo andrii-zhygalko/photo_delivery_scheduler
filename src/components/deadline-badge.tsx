@@ -52,6 +52,15 @@ export function DeadlineBadge({
     ? `${Math.abs(days)} day${Math.abs(days) === 1 ? '' : 's'} overdue`
     : `${days} day${days === 1 ? '' : 's'} remaining`;
 
+  // Generate accessible label with urgency level and context
+  const urgencyLevel = days < 0
+    ? 'Overdue - urgent'
+    : days >= 1 && days <= 3
+      ? 'Due soon - high priority'
+      : 'Upcoming';
+
+  const accessibleLabel = `${urgencyLevel}: ${badgeText}${isCustomEarlier ? ', custom deadline' : ''}`;
+
   return (
     <Badge
       variant={variant}
@@ -60,9 +69,10 @@ export function DeadlineBadge({
         customClasses,
         className
       )}
+      aria-label={accessibleLabel}
     >
       {badgeText}
-      {isCustomEarlier && ' ⚡'}
+      {isCustomEarlier && <span aria-hidden="true"> ⚡</span>}
     </Badge>
   );
 }
