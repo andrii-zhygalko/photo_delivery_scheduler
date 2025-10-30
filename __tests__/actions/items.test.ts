@@ -212,6 +212,7 @@ describe('Server Actions - Items', () => {
       const updateFormData = new FormData();
       updateFormData.append('client_name', 'Hacked Name');
       updateFormData.append('shoot_date', '2025-11-12');
+      updateFormData.append('status', 'EDITING');
 
       const updateResult = await updateItemAction(itemId, updateFormData);
 
