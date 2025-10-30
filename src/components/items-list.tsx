@@ -72,18 +72,36 @@ export function ItemsList({
   }
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {items.map((item) => (
-        <ItemCard
-          key={item.id}
-          item={item}
-          userTimezone={userTimezone}
-          onEdit={handleEdit}
-          onDeliver={handleDeliver}
-          onArchive={handleArchive}
-          onDelete={handleDelete}
-        />
-      ))}
-    </div>
+    <>
+      {/* Live region for item count announcements */}
+      <div
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        className="sr-only"
+      >
+        {items.length} {items.length === 1 ? 'item' : 'items'} found
+      </div>
+
+      {/* Semantic list structure */}
+      <ul
+        role="list"
+        aria-label="Delivery items"
+        className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+      >
+        {items.map((item) => (
+          <li key={item.id} role="listitem">
+            <ItemCard
+              item={item}
+              userTimezone={userTimezone}
+              onEdit={handleEdit}
+              onDeliver={handleDeliver}
+              onArchive={handleArchive}
+              onDelete={handleDelete}
+            />
+          </li>
+        ))}
+      </ul>
+    </>
   );
 }
