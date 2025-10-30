@@ -44,6 +44,9 @@ export function ItemCard({
     userTimezone
   );
 
+  const itemId = `item-${item.id}`;
+  const titleId = `${itemId}-title`;
+
   return (
     <div
       className={cn(
@@ -52,11 +55,18 @@ export function ItemCard({
         className
       )}
     >
-      <Card className="bg-gradient-card border-0 h-full flex flex-col">
+      <Card
+        className="bg-gradient-card border-0 h-full flex flex-col"
+        role="article"
+        aria-labelledby={titleId}
+      >
         <CardHeader className="space-y-3 pb-3">
           {/* Client Name */}
           <div className="flex items-start justify-between gap-2">
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 truncate flex-1">
+            <h3
+              id={titleId}
+              className="text-lg font-semibold text-slate-900 dark:text-slate-100 truncate flex-1"
+            >
               {item.client_name}
             </h3>
             <StatusPill status={item.status} />
@@ -65,8 +75,11 @@ export function ItemCard({
           {/* Dates Section */}
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
-              <CalendarIcon className="h-4 w-4" />
-              <span>Shoot: {formattedShootDate}</span>
+              <CalendarIcon className="h-4 w-4" aria-hidden="true" />
+              <span>
+                <span className="sr-only">Shoot date: </span>
+                <time dateTime={item.shoot_date}>{formattedShootDate}</time>
+              </span>
             </div>
             <div className="flex items-center justify-between gap-2">
               <span className="text-sm text-slate-600 dark:text-slate-400">
@@ -98,8 +111,9 @@ export function ItemCard({
               variant="default"
               onClick={() => onDeliver(item)}
               className="flex items-center gap-1"
+              aria-label={`Mark ${item.client_name} as delivered`}
             >
-              <CheckCircle2Icon className="h-4 w-4" />
+              <CheckCircle2Icon className="h-4 w-4" aria-hidden="true" />
               Deliver
             </Button>
           )}
@@ -110,8 +124,9 @@ export function ItemCard({
               variant="outline"
               onClick={() => onArchive(item)}
               className="flex items-center gap-1"
+              aria-label={`Archive ${item.client_name}`}
             >
-              <ArchiveIcon className="h-4 w-4" />
+              <ArchiveIcon className="h-4 w-4" aria-hidden="true" />
               Archive
             </Button>
           )}
@@ -122,8 +137,9 @@ export function ItemCard({
               variant="ghost"
               onClick={() => onEdit(item)}
               className="flex items-center gap-1 ml-auto"
+              aria-label={`Edit delivery item for ${item.client_name}`}
             >
-              <Edit2Icon className="h-4 w-4" />
+              <Edit2Icon className="h-4 w-4" aria-hidden="true" />
               Edit
             </Button>
           )}
@@ -134,8 +150,9 @@ export function ItemCard({
               variant="ghost"
               onClick={() => onDelete(item)}
               className="flex items-center gap-1 text-destructive hover:text-destructive hover:bg-destructive/10"
+              aria-label={`Delete ${item.client_name}`}
             >
-              <Trash2Icon className="h-4 w-4" />
+              <Trash2Icon className="h-4 w-4" aria-hidden="true" />
             </Button>
           )}
         </CardFooter>
