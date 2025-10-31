@@ -2,7 +2,11 @@ import { describe, test, expect, beforeAll, afterAll, vi } from 'vitest';
 import { withAuth } from '@/lib/api/with-auth';
 import { db } from '@/lib/db';
 import { deliveryItems } from '@/lib/db/schema';
-import { createTestUser, createTestItems, cleanupTestUsers } from '../helpers/db';
+import {
+  createTestUser,
+  createTestItems,
+  cleanupTestUsers,
+} from '../helpers/db';
 import { mockSession } from '../helpers/auth';
 import * as authModule from '@/lib/auth/session';
 import { sql } from 'drizzle-orm';
@@ -17,7 +21,7 @@ describe('withAuth Helper', () => {
     testEmail = user.email;
 
     // Create some test items (use sql.raw for SET commands)
-    await db.transaction(async (tx) => {
+    await db.transaction(async tx => {
       await tx.execute(sql.raw(`SET LOCAL app.user_id = '${testUserId}'`));
       await createTestItems(tx, testUserId, 3);
     });
@@ -64,7 +68,7 @@ describe('withAuth Helper', () => {
     const session = mockSession(testUserId, testEmail);
     vi.spyOn(authModule, 'getServerSession').mockResolvedValue(session);
 
-    const result = await withAuth(async (callbackSession) => {
+    const result = await withAuth(async callbackSession => {
       return callbackSession.user.id;
     });
 
@@ -83,7 +87,7 @@ describe('withAuth Helper', () => {
 
     // Should return only this user's items
     expect(items).toHaveLength(3);
-    expect(items.every((item) => item.user_id === testUserId)).toBe(true);
+    expect(items.every(item => item.user_id === testUserId)).toBe(true);
 
     vi.restoreAllMocks();
   });
@@ -92,7 +96,7 @@ describe('withAuth Helper', () => {
     const session = mockSession(testUserId, testEmail);
     vi.spyOn(authModule, 'getServerSession').mockResolvedValue(session);
 
-    const itemsBefore = await db.transaction(async (tx) => {
+    const itemsBefore = await db.transaction(async tx => {
       await tx.execute(sql.raw(`SET LOCAL app.user_id = '${testUserId}'`));
       return tx.select().from(deliveryItems);
     });
@@ -115,11 +119,11 @@ describe('withAuth Helper', () => {
         throw new Error('Test error');
       });
     } catch (error) {
-      // Expected to throw
+      console.error(error);
     }
 
     // Verify item was NOT inserted (transaction rolled back)
-    const itemsAfter = await db.transaction(async (tx) => {
+    const itemsAfter = await db.transaction(async tx => {
       await tx.execute(sql.raw(`SET LOCAL app.user_id = '${testUserId}'`));
       return tx.select().from(deliveryItems);
     });

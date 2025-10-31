@@ -5,7 +5,7 @@
 
 import { describe, test, expect, beforeAll, afterAll, vi } from 'vitest';
 import { db } from '@/lib/db';
-import { sql, eq, ne, and } from 'drizzle-orm';
+import { sql, eq } from 'drizzle-orm';
 import { deliveryItems, userSettings } from '@/lib/db/schema';
 import { createTestUser, cleanupTestUsers } from '../helpers/db';
 import {

@@ -19,7 +19,7 @@ export function ArchivedPageClient({
   userSettings,
 }: ArchivedPageClientProps) {
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<DeliveryItem | undefined>();
   const [confirmDialog, setConfirmDialog] = useState<{
