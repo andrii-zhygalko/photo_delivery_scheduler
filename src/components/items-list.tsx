@@ -65,8 +65,8 @@ export function ItemsList({
   if (items.length === 0) {
     return (
       <EmptyState
-        message="No items found"
-        description="Try adjusting your filters or create a new delivery item"
+        message='No shoots found'
+        description='Try adjusting your filters or create a new delivery shoot'
       />
     );
   }
@@ -75,22 +75,20 @@ export function ItemsList({
     <>
       {/* Live region for item count announcements */}
       <div
-        role="status"
-        aria-live="polite"
-        aria-atomic="true"
-        className="sr-only"
-      >
+        role='status'
+        aria-live='polite'
+        aria-atomic='true'
+        className='sr-only'>
         {items.length} {items.length === 1 ? 'item' : 'items'} found
       </div>
 
       {/* Semantic list structure */}
       <ul
-        role="list"
-        aria-label="Delivery items"
-        className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
-      >
-        {items.map((item) => (
-          <li key={item.id} role="listitem">
+        role='list'
+        aria-label='Delivery items'
+        className='grid gap-4 sm:grid-cols-2 lg:grid-cols-3 grid-auto-rows-[1fr]'>
+        {items.map(item => (
+          <li key={item.id} role='listitem' className='h-full'>
             <ItemCard
               item={item}
               userTimezone={userTimezone}
@@ -98,6 +96,7 @@ export function ItemsList({
               onDeliver={handleDeliver}
               onArchive={handleArchive}
               onDelete={handleDelete}
+              className='h-full'
             />
           </li>
         ))}

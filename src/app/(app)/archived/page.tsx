@@ -25,7 +25,7 @@ export default async function ArchivedPage(props: ArchivedPageProps) {
   const searchParams = await props.searchParams;
 
   // Fetch data within RLS transaction
-  const { items, userSettings } = await db.transaction(async (tx) => {
+  const { items, userSettings } = await db.transaction(async tx => {
     // Set GUC for RLS
     await tx.execute(sql.raw(`SET LOCAL app.user_id = '${userId}'`));
 
@@ -50,7 +50,7 @@ export default async function ArchivedPage(props: ArchivedPageProps) {
   });
 
   return (
-    <div className="container py-8">
+    <div className='container py-8 px-4'>
       <ArchivedPageClient items={items} userSettings={userSettings} />
     </div>
   );

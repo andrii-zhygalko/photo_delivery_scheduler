@@ -9,11 +9,13 @@ import { Skeleton } from '@/components/ui/skeleton';
  */
 export default function ArchivedLoading() {
   return (
-    <div className="container py-8">
+    <div className='container py-8 px-4'>
       {/* Header skeleton */}
-      <div className="mb-6 space-y-2">
-        <Skeleton className="h-9 w-48 rounded-md" /> {/* "Archived Items" heading */}
-        <Skeleton className="h-5 w-80 max-w-full rounded" /> {/* Description text */}
+      <div className='mb-6 space-y-2'>
+        <Skeleton className='h-9 w-48 rounded-md' />{' '}
+        {/* "Archived Items" heading */}
+        <Skeleton className='h-5 w-80 max-w-full rounded' />{' '}
+        {/* Description text */}
       </div>
 
       {/* Skeleton grid matching ItemsList */}

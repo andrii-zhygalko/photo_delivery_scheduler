@@ -25,7 +25,7 @@ export function Navbar({ user }: NavbarProps) {
   const pathname = usePathname();
 
   const links = [
-    { href: '/items', label: 'Items' },
+    { href: '/items', label: 'Shoots' },
     { href: '/archived', label: 'Archived' },
     { href: '/settings', label: 'Settings' },
   ];
@@ -37,7 +37,7 @@ export function Navbar({ user }: NavbarProps) {
     if (user.name) {
       return user.name
         .split(' ')
-        .map((n) => n[0])
+        .map(n => n[0])
         .join('')
         .toUpperCase()
         .slice(0, 2);
@@ -50,17 +50,16 @@ export function Navbar({ user }: NavbarProps) {
 
   return (
     <nav
-      aria-label="Main navigation"
-      className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
-    >
-      <div className="container flex h-16 items-center justify-between">
-        <div className="flex items-center gap-6">
-          <Link href="/items" className="text-lg font-semibold">
+      aria-label='Main navigation'
+      className='sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60'>
+      <div className='container px-4 flex h-16 items-center justify-between'>
+        <div className='flex items-center gap-6'>
+          <Link href='/items' className='text-lg font-semibold'>
             Photo Delivery
           </Link>
 
-          <div className="hidden md:flex gap-4">
-            {links.map((link) => (
+          <div className='hidden md:flex gap-4'>
+            {links.map(link => (
               <Link
                 key={link.href}
                 href={link.href}
@@ -70,8 +69,7 @@ export function Navbar({ user }: NavbarProps) {
                     ? 'text-foreground'
                     : 'text-muted-foreground'
                 )}
-                aria-current={isActive(link.href) ? 'page' : undefined}
-              >
+                aria-current={isActive(link.href) ? 'page' : undefined}>
                 {link.label}
               </Link>
             ))}
@@ -81,28 +79,30 @@ export function Navbar({ user }: NavbarProps) {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button
-              className="rounded-full focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-              aria-label="User menu"
-            >
+              className='rounded-full focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2'
+              aria-label='User menu'>
               <Avatar>
                 <AvatarImage
                   src={user.image || undefined}
                   alt={`${user.name || user.email || 'User'}'s profile picture`}
                 />
-                <AvatarFallback aria-label={`${user.name || user.email || 'User'} (initials)`}>
+                <AvatarFallback
+                  aria-label={`${
+                    user.name || user.email || 'User'
+                  } (initials)`}>
                   {getInitials()}
                 </AvatarFallback>
               </Avatar>
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56">
-            <div className="px-2 py-1.5 text-sm">
-              <p className="font-medium">{user.name}</p>
-              <p className="text-xs text-muted-foreground">{user.email}</p>
+          <DropdownMenuContent align='end' className='w-56'>
+            <div className='px-2 py-1.5 text-sm'>
+              <p className='font-medium'>{user.name}</p>
+              <p className='text-xs text-muted-foreground'>{user.email}</p>
             </div>
             <DropdownMenuSeparator />
-            <div className="md:hidden">
-              {links.map((link) => (
+            <div className='md:hidden'>
+              {links.map(link => (
                 <DropdownMenuItem key={link.href} asChild>
                   <Link href={link.href}>{link.label}</Link>
                 </DropdownMenuItem>
@@ -111,8 +111,7 @@ export function Navbar({ user }: NavbarProps) {
             </div>
             <DropdownMenuItem
               onClick={() => signOut({ callbackUrl: '/' })}
-              className="cursor-pointer"
-            >
+              className='cursor-pointer'>
               Sign out
             </DropdownMenuItem>
           </DropdownMenuContent>

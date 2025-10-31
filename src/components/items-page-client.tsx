@@ -7,7 +7,11 @@ import { Button } from '@/components/ui/button';
 import { ItemsList } from '@/components/items-list';
 import { ItemDialog } from '@/components/item-dialog';
 import { ConfirmDialog } from '@/components/confirm-dialog';
-import { deliverItemAction, archiveItemAction, deleteItemAction } from '@/actions/items';
+import {
+  deliverItemAction,
+  archiveItemAction,
+  deleteItemAction,
+} from '@/actions/items';
 import type { DeliveryItem, UserSettings } from '@/lib/db/schema';
 
 interface ItemsPageClientProps {
@@ -66,7 +70,7 @@ export function ItemsPageClient({ items, userSettings }: ItemsPageClientProps) {
       confirmText: 'Archive',
       variant: 'default',
       onConfirm: () => {
-        setConfirmDialog((prev) => ({ ...prev, open: false }));
+        setConfirmDialog(prev => ({ ...prev, open: false }));
         startTransition(async () => {
           const result = await archiveItemAction(item.id);
           if (result.success) {
@@ -88,7 +92,7 @@ export function ItemsPageClient({ items, userSettings }: ItemsPageClientProps) {
       confirmText: 'Delete',
       variant: 'destructive',
       onConfirm: () => {
-        setConfirmDialog((prev) => ({ ...prev, open: false }));
+        setConfirmDialog(prev => ({ ...prev, open: false }));
         startTransition(async () => {
           const result = await deleteItemAction(item.id);
           if (result.success) {
@@ -104,14 +108,14 @@ export function ItemsPageClient({ items, userSettings }: ItemsPageClientProps) {
 
   return (
     <>
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+      <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6'>
         <div>
-          <h1 className="text-3xl font-bold mb-1">Delivery Items</h1>
-          <p className="text-sm text-muted-foreground">
-            {items.length} {items.length === 1 ? 'item' : 'items'}
+          <h1 className='text-3xl font-bold mb-1'>Shoots List</h1>
+          <p className='text-sm text-muted-foreground'>
+            {items.length} {items.length === 1 ? 'shoot' : 'shoots'}
           </p>
         </div>
-        <Button onClick={handleNewItem}>+ New Item</Button>
+        <Button onClick={handleNewItem}>+ New Shoot</Button>
       </div>
 
       <ItemsList
@@ -132,9 +136,7 @@ export function ItemsPageClient({ items, userSettings }: ItemsPageClientProps) {
 
       <ConfirmDialog
         open={confirmDialog.open}
-        onOpenChange={(open) =>
-          setConfirmDialog((prev) => ({ ...prev, open }))
-        }
+        onOpenChange={open => setConfirmDialog(prev => ({ ...prev, open }))}
         title={confirmDialog.title}
         description={confirmDialog.description}
         confirmText={confirmDialog.confirmText}

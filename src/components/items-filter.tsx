@@ -35,55 +35,52 @@ export function ItemsFilter() {
   };
 
   return (
-    <div className="flex flex-wrap gap-3 mb-6">
-      <div className="flex-1 min-w-[150px]">
-        <label htmlFor="status-filter" className="sr-only">
+    <div className='flex justify-between flex-wrap gap-3 mb-3'>
+      <div className=''>
+        <label htmlFor='status-filter' className='sr-only'>
           Filter by status
         </label>
         <Select
           value={currentStatus}
-          onValueChange={(v) => updateParam('status', v)}
-        >
-          <SelectTrigger id="status-filter" aria-label="Filter by status">
-            <SelectValue placeholder="Filter by status" />
+          onValueChange={v => updateParam('status', v)}>
+          <SelectTrigger id='status-filter' aria-label='Filter by status'>
+            <SelectValue placeholder='Filter by status' />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Statuses</SelectItem>
-            <SelectItem value="TO_DO">To Do</SelectItem>
-            <SelectItem value="EDITING">Editing</SelectItem>
-            <SelectItem value="DELIVERED">Delivered</SelectItem>
+            <SelectItem value='all'>All Statuses</SelectItem>
+            <SelectItem value='TO_DO'>To Do</SelectItem>
+            <SelectItem value='EDITING'>Editing</SelectItem>
+            <SelectItem value='DELIVERED'>Delivered</SelectItem>
           </SelectContent>
         </Select>
       </div>
 
-      <div className="flex-1 min-w-[150px]">
-        <label htmlFor="sort-filter" className="sr-only">
+      <div className=''>
+        <label htmlFor='sort-filter' className='sr-only'>
           Sort by
         </label>
-        <Select
-          value={currentSort}
-          onValueChange={(v) => updateParam('sort', v)}
-        >
-          <SelectTrigger id="sort-filter" aria-label="Sort by">
-            <SelectValue placeholder="Sort by" />
+        <Select value={currentSort} onValueChange={v => updateParam('sort', v)}>
+          <SelectTrigger id='sort-filter' aria-label='Sort by'>
+            <SelectValue placeholder='Sort by' />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="deadline">Deadline</SelectItem>
-            <SelectItem value="shoot_date">Shoot Date</SelectItem>
-            <SelectItem value="created_at">Created Date</SelectItem>
+            <SelectItem value='deadline'>Deadline</SelectItem>
+            <SelectItem value='shoot_date'>Shoot Date</SelectItem>
+            <SelectItem value='created_at'>Created Date</SelectItem>
           </SelectContent>
         </Select>
       </div>
 
       <Button
-        variant="outline"
-        size="icon"
+        variant='outline'
+        size='icon'
         onClick={toggleOrder}
-        aria-label={`Toggle sort order: currently ${currentOrder === 'asc' ? 'ascending' : 'descending'}`}
+        aria-label={`Toggle sort order: currently ${
+          currentOrder === 'asc' ? 'ascending' : 'descending'
+        }`}
         title={currentOrder === 'asc' ? 'Ascending' : 'Descending'}
-        className="shrink-0"
-      >
-        <ArrowUpDown className="h-4 w-4" aria-hidden="true" />
+        className='shrink-0'>
+        <ArrowUpDown className='h-4 w-4' aria-hidden='true' />
       </Button>
     </div>
   );

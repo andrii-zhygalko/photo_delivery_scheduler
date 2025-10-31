@@ -46,19 +46,19 @@ export function ArchivedPageClient({
   const handleDelete = async (item: DeliveryItem) => {
     setConfirmDialog({
       open: true,
-      title: 'Delete Item?',
+      title: 'Delete shoot?',
       description: `This will permanently delete "${item.client_name}". This action cannot be undone.`,
       confirmText: 'Delete',
       variant: 'destructive',
       onConfirm: () => {
-        setConfirmDialog((prev) => ({ ...prev, open: false }));
+        setConfirmDialog(prev => ({ ...prev, open: false }));
         startTransition(async () => {
           const result = await deleteItemAction(item.id);
           if (result.success) {
-            toast.success('Item deleted');
+            toast.success('Shoot deleted');
             router.refresh();
           } else {
-            toast.error(result.error || 'Failed to delete item');
+            toast.error(result.error || 'Failed to delete shoot');
           }
         });
       },
@@ -67,10 +67,10 @@ export function ArchivedPageClient({
 
   return (
     <>
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold mb-1">Archived Items</h1>
-        <p className="text-sm text-muted-foreground">
-          {items.length} archived {items.length === 1 ? 'item' : 'items'}
+      <div className='mb-6'>
+        <h1 className='text-3xl font-bold mb-1'>Archived Shoots</h1>
+        <p className='text-sm text-muted-foreground'>
+          {items.length} archived {items.length === 1 ? 'shoot' : 'shoots'}
         </p>
       </div>
 
@@ -90,9 +90,7 @@ export function ArchivedPageClient({
 
       <ConfirmDialog
         open={confirmDialog.open}
-        onOpenChange={(open) =>
-          setConfirmDialog((prev) => ({ ...prev, open }))
-        }
+        onOpenChange={open => setConfirmDialog(prev => ({ ...prev, open }))}
         title={confirmDialog.title}
         description={confirmDialog.description}
         confirmText={confirmDialog.confirmText}

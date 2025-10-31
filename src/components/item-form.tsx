@@ -45,7 +45,9 @@ export function ItemForm({
   const isEditMode = !!item;
 
   // Convert Date/string to YYYY-MM-DD format for input type="date"
-  const formatDateForInput = (date: Date | string | null | undefined): string => {
+  const formatDateForInput = (
+    date: Date | string | null | undefined
+  ): string => {
     if (!date) return '';
     const d = typeof date === 'string' ? new Date(date) : date;
     return d.toISOString().split('T')[0];
@@ -72,7 +74,8 @@ export function ItemForm({
   const shootDate = form.watch('shoot_date');
 
   // Calculate computed deadline preview
-  const [computedDeadlinePreview, setComputedDeadlinePreview] = useState<string>('');
+  const [computedDeadlinePreview, setComputedDeadlinePreview] =
+    useState<string>('');
 
   useEffect(() => {
     if (shootDate) {
@@ -99,17 +102,17 @@ export function ItemForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(handleSubmit)} className='space-y-6'>
         {/* Client Name */}
         <FormField
           control={form.control}
-          name="client_name"
+          name='client_name'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Client Name *</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="John & Jane Doe"
+                  placeholder='John & Jane Doe'
                   {...field}
                   disabled={isPending}
                   autoFocus
@@ -123,12 +126,12 @@ export function ItemForm({
         {/* Shoot Date */}
         <FormField
           control={form.control}
-          name="shoot_date"
+          name='shoot_date'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Shoot Date *</FormLabel>
               <FormControl>
-                <Input type="date" {...field} disabled={isPending} />
+                <Input type='date' {...field} disabled={isPending} />
               </FormControl>
               {computedDeadlinePreview && (
                 <FormDescription>
@@ -144,25 +147,24 @@ export function ItemForm({
         {isEditMode && (
           <FormField
             control={form.control}
-            name="status"
+            name='status'
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Status</FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
-                  disabled={isPending}
-                >
+                  disabled={isPending}>
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="TO_DO">To Do</SelectItem>
-                    <SelectItem value="EDITING">Editing</SelectItem>
-                    <SelectItem value="DELIVERED">Delivered</SelectItem>
-                    <SelectItem value="ARCHIVED">Archived</SelectItem>
+                    <SelectItem value='TO_DO'>To Do</SelectItem>
+                    <SelectItem value='EDITING'>Editing</SelectItem>
+                    <SelectItem value='DELIVERED'>Delivered</SelectItem>
+                    <SelectItem value='ARCHIVED'>Archived</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -172,12 +174,12 @@ export function ItemForm({
         )}
 
         {/* Custom Deadline Toggle */}
-        <div className="space-y-4">
-          <div className="flex items-center space-x-2">
+        <div className='space-y-4'>
+          <div className='flex items-center space-x-2'>
             <Checkbox
-              id="custom-deadline-toggle"
+              id='custom-deadline-toggle'
               checked={showCustomDeadline}
-              onCheckedChange={(checked) => {
+              onCheckedChange={checked => {
                 setShowCustomDeadline(!!checked);
                 form.setValue('use_custom_deadline', !!checked);
                 if (!checked) {
@@ -187,9 +189,8 @@ export function ItemForm({
               disabled={isPending}
             />
             <label
-              htmlFor="custom-deadline-toggle"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
+              htmlFor='custom-deadline-toggle'
+              className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>
               Set custom deadline
             </label>
           </div>
@@ -198,13 +199,13 @@ export function ItemForm({
           {showCustomDeadline && (
             <FormField
               control={form.control}
-              name="custom_deadline"
+              name='custom_deadline'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Custom Deadline</FormLabel>
                   <FormControl>
                     <Input
-                      type="date"
+                      type='date'
                       {...field}
                       disabled={isPending}
                       min={shootDate || undefined}
@@ -223,14 +224,14 @@ export function ItemForm({
         {/* Notes */}
         <FormField
           control={form.control}
-          name="notes"
+          name='notes'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Notes</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="Add any notes about this shoot..."
-                  className="min-h-[100px]"
+                  placeholder='Add any notes about this shoot...'
+                  className='min-h-[100px]'
                   {...field}
                   disabled={isPending}
                 />
@@ -241,23 +242,22 @@ export function ItemForm({
         />
 
         {/* Form Actions */}
-        <div className="flex gap-3 justify-end pt-4">
+        <div className='flex gap-3 justify-end pt-4'>
           <Button
-            type="button"
-            variant="outline"
+            type='button'
+            variant='outline'
             onClick={onCancel}
-            disabled={isPending}
-          >
+            disabled={isPending}>
             Cancel
           </Button>
-          <Button type="submit" disabled={isPending}>
+          <Button type='submit' disabled={isPending}>
             {isPending
               ? isEditMode
                 ? 'Saving...'
                 : 'Creating...'
               : isEditMode
-                ? 'Save Changes'
-                : 'Create Item'}
+              ? 'Save Changes'
+              : 'Create Shoot'}
           </Button>
         </div>
       </form>

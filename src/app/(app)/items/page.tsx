@@ -28,7 +28,7 @@ export default async function ItemsPage(props: ItemsPageProps) {
   const searchParams = await props.searchParams;
 
   // Fetch data within RLS transaction
-  const { items, userSettings } = await db.transaction(async (tx) => {
+  const { items, userSettings } = await db.transaction(async tx => {
     // Set GUC for RLS
     await tx.execute(sql.raw(`SET LOCAL app.user_id = '${userId}'`));
 
@@ -57,7 +57,9 @@ export default async function ItemsPage(props: ItemsPageProps) {
 
     // Filter out archived items unless explicitly filtering for them
     const filteredItems = itemsList.filter((item: DeliveryItem) =>
-      statusFilter === 'ARCHIVED' ? item.status === 'ARCHIVED' : item.status !== 'ARCHIVED'
+      statusFilter === 'ARCHIVED'
+        ? item.status === 'ARCHIVED'
+        : item.status !== 'ARCHIVED'
     );
 
     return {
@@ -67,9 +69,9 @@ export default async function ItemsPage(props: ItemsPageProps) {
   });
 
   return (
-    <div className="container py-8">
-      <ItemsPageClient items={items} userSettings={userSettings} />
+    <div className='container py-8 px-4'>
       <ItemsFilter />
+      <ItemsPageClient items={items} userSettings={userSettings} />
     </div>
   );
 }
