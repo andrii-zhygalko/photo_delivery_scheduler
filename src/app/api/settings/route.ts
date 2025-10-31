@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { withAuth } from '@/lib/api';
 import { updateSettingsSchema } from '@/lib/api/schemas';
-import { userSettings, deliveryItems } from '@/lib/db/schema';
+import { userSettings } from '@/lib/db/schema';
 import { eq, sql } from 'drizzle-orm';
 import { isValidTimezone } from '@/lib/timezone-detector';
 import { ZodError } from 'zod';
