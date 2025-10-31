@@ -4,7 +4,7 @@ import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { Button } from '@/components/ui/button';
 import { StatusPill } from '@/components/status-pill';
 import { DeadlineBadge } from '@/components/deadline-badge';
-import { formatDeadline, formatShortDate } from '@/lib/date-utils';
+import { formatDeadline } from '@/lib/date-utils';
 import type { DeliveryItem } from '@/lib/db/schema';
 import { CalendarIcon, Edit2Icon, CheckCircle2Icon, ArchiveIcon, Trash2Icon } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -38,7 +38,7 @@ export function ItemCard({
   onDelete,
   className,
 }: ItemCardProps) {
-  const formattedShootDate = formatShortDate(item.shoot_date, userTimezone);
+  const formattedShootDate = formatDeadline(item.shoot_date, userTimezone);
   const formattedDeadline = formatDeadline(
     item.custom_deadline || item.computed_deadline,
     userTimezone
