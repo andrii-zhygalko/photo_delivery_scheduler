@@ -24,7 +24,7 @@ function toDateTime(date: Date | string): DateTime {
 export function formatDeadline(utcDeadline: Date | string, userTimezone: string): string {
   return toDateTime(utcDeadline)
     .setZone(userTimezone)
-    .toLocaleString(DateTime.DATE_MED);
+    .toLocaleString(DateTime.DATE_MED, { locale: 'en-US' });
 }
 
 /**
@@ -36,7 +36,7 @@ export function formatDeadline(utcDeadline: Date | string, userTimezone: string)
 export function formatShortDate(utcDate: Date | string, userTimezone: string): string {
   return toDateTime(utcDate)
     .setZone(userTimezone)
-    .toLocaleString(DateTime.DATE_SHORT);
+    .toLocaleString(DateTime.DATE_SHORT, { locale: 'en-US' });
 }
 
 /**
