@@ -53,33 +53,30 @@ describe('Date Utilities', () => {
     test('formats to short date in America/New_York', () => {
       const utcDate = '2025-11-15';
       const result = formatShortDate(utcDate, 'America/New_York');
-      // Luxon uses system locale, so format can vary
-      // Just verify it contains the date components
-      expect(result).toBeTruthy();
-      expect(result).toMatch(/11|15|25|2025/);
+      // With en-US locale, DATE_SHORT format is MM/DD/YYYY (with full year)
+      // Date string '2025-11-15' is treated as midnight UTC, which is Nov 14 in NY
+      expect(result).toBe('11/14/2025');
     });
 
     test('formats to short date in Europe/Rome', () => {
       const utcDate = '2025-11-15';
       const result = formatShortDate(utcDate, 'Europe/Rome');
-      // Luxon uses system locale regardless of timezone
-      // Just verify it's formatted and contains date components
-      expect(result).toBeTruthy();
-      expect(result).toMatch(/11|15|25|2025/);
+      // With en-US locale, still uses MM/DD/YYYY format (locale-consistent)
+      expect(result).toBe('11/15/2025');
     });
 
     test('works with Date objects', () => {
       const date = new Date('2025-11-15T00:00:00.000Z');
       const result = formatShortDate(date, 'America/New_York');
       // Nov 15 00:00 UTC = Nov 14 19:00 EST (previous day due to timezone)
-      expect(result).toBeTruthy();
-      expect(result).toMatch(/11|14|25|2025/);
+      expect(result).toBe('11/14/2025');
     });
 
     test('handles timestamp strings', () => {
       const utcTimestamp = '2025-11-15T23:59:00.000Z';
       const result = formatShortDate(utcTimestamp, 'Asia/Tokyo');
-      expect(result).toBeTruthy();
+      // Nov 15 23:59 UTC = Nov 16 08:59 JST (next day)
+      expect(result).toBe('11/16/2025');
     });
   });
 
