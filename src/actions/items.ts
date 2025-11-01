@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { getServerSession } from '@/lib/auth/session';
 import { db } from '@/lib/db';
-import { deliveryItems } from '@/lib/db/schema';
+import { deliveryItems, type DeliveryItem } from '@/lib/db/schema';
 import { createItemSchema, updateItemSchema } from '@/lib/api/schemas';
 import { eq, sql } from 'drizzle-orm';
 
@@ -17,7 +17,7 @@ export type ActionResult<T = void> =
  */
 export async function createItemAction(
   formData: FormData
-): Promise<ActionResult<{ id: string }>> {
+): Promise<ActionResult<DeliveryItem>> {
   try {
     // 1. Check authentication
     const session = await getServerSession();
@@ -60,7 +60,7 @@ export async function createItemAction(
         })
         .returning();
 
-      return { id: item.id };
+      return item;
     });
 
     // 4. Revalidate pages
