@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState, useTransition, useOptimistic } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -12,7 +12,12 @@ import {
   archiveItemAction,
   deleteItemAction,
 } from '@/actions/items';
-import type { DeliveryItem, UserSettings } from '@/lib/db/schema';
+import type {
+  DeliveryItem,
+  UserSettings,
+  OptimisticDeliveryItem,
+  OptimisticAction,
+} from '@/lib/db/schema';
 
 interface ItemsPageClientProps {
   items: DeliveryItem[];
@@ -40,6 +45,41 @@ export function ItemsPageClient({ items, userSettings }: ItemsPageClientProps) {
     onConfirm: () => {},
   });
 
+  // Optimistic updates reducer
+  const [optimisticItems, addOptimisticUpdate] = useOptimistic<
+    OptimisticDeliveryItem[],
+    OptimisticAction
+  >(items, (state, action) => {
+    switch (action.type) {
+      case 'deliver':
+        return state.map(item =>
+          item.id === action.itemId
+            ? {
+                ...item,
+                status: 'DELIVERED' as const,
+                delivered_at: new Date(),
+                _optimistic: true,
+              }
+            : item
+        );
+      case 'archive':
+        // Remove from list immediately (Items page only shows non-archived)
+        return state.filter(item => item.id !== action.itemId);
+      case 'delete':
+        return state.filter(item => item.id !== action.itemId);
+      case 'add':
+        return [...state, { ...action.item, _optimistic: true }];
+      case 'update':
+        return state.map(item =>
+          item.id === action.itemId
+            ? { ...item, ...action.updates, _optimistic: true }
+            : item
+        );
+      default:
+        return state;
+    }
+  });
+
   const handleNewItem = () => {
     setSelectedItem(undefined);
     setDialogOpen(true);
@@ -52,12 +92,16 @@ export function ItemsPageClient({ items, userSettings }: ItemsPageClientProps) {
 
   const handleDeliver = async (item: DeliveryItem) => {
     startTransition(async () => {
+      // Apply optimistic update inside transition
+      addOptimisticUpdate({ type: 'deliver', itemId: item.id });
+
       const result = await deliverItemAction(item.id);
       if (result.success) {
         toast.success('Item marked as delivered!');
         router.refresh();
       } else {
         toast.error(result.error || 'Failed to mark item as delivered');
+        router.refresh(); // Rollback by syncing with server state
       }
     });
   };
@@ -70,14 +114,20 @@ export function ItemsPageClient({ items, userSettings }: ItemsPageClientProps) {
       confirmText: 'Archive',
       variant: 'default',
       onConfirm: () => {
+        // Close dialog immediately
         setConfirmDialog(prev => ({ ...prev, open: false }));
+
         startTransition(async () => {
+          // Apply optimistic update inside transition
+          addOptimisticUpdate({ type: 'archive', itemId: item.id });
+
           const result = await archiveItemAction(item.id);
           if (result.success) {
             toast.success('Item archived');
             router.refresh();
           } else {
             toast.error(result.error || 'Failed to archive item');
+            router.refresh(); // Rollback by syncing with server state
           }
         });
       },
@@ -92,14 +142,20 @@ export function ItemsPageClient({ items, userSettings }: ItemsPageClientProps) {
       confirmText: 'Delete',
       variant: 'destructive',
       onConfirm: () => {
+        // Close dialog immediately
         setConfirmDialog(prev => ({ ...prev, open: false }));
+
         startTransition(async () => {
+          // Apply optimistic update inside transition
+          addOptimisticUpdate({ type: 'delete', itemId: item.id });
+
           const result = await deleteItemAction(item.id);
           if (result.success) {
             toast.success('Item deleted');
             router.refresh();
           } else {
             toast.error(result.error || 'Failed to delete item');
+            router.refresh(); // Rollback by syncing with server state
           }
         });
       },
@@ -119,7 +175,7 @@ export function ItemsPageClient({ items, userSettings }: ItemsPageClientProps) {
       </div>
 
       <ItemsList
-        items={items}
+        items={optimisticItems}
         userTimezone={userSettings.timezone}
         onEdit={handleEdit}
         onDeliver={handleDeliver}
@@ -132,6 +188,7 @@ export function ItemsPageClient({ items, userSettings }: ItemsPageClientProps) {
         onOpenChange={setDialogOpen}
         item={selectedItem}
         userSettings={userSettings}
+        onOptimisticUpdate={addOptimisticUpdate}
       />
 
       <ConfirmDialog

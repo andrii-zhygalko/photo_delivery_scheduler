@@ -5,17 +5,17 @@ import { Button } from '@/components/ui/button';
 import { StatusPill } from '@/components/status-pill';
 import { DeadlineBadge } from '@/components/deadline-badge';
 import { formatDeadline } from '@/lib/date-utils';
-import type { DeliveryItem } from '@/lib/db/schema';
+import type { OptimisticDeliveryItem } from '@/lib/db/schema';
 import { CalendarIcon, Edit2Icon, CheckCircle2Icon, ArchiveIcon, Trash2Icon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface ItemCardProps {
-  item: DeliveryItem;
+  item: OptimisticDeliveryItem;
   userTimezone: string; // IANA timezone name
-  onEdit?: (item: DeliveryItem) => void;
-  onDeliver?: (item: DeliveryItem) => void;
-  onArchive?: (item: DeliveryItem) => void;
-  onDelete?: (item: DeliveryItem) => void;
+  onEdit?: (item: OptimisticDeliveryItem) => void;
+  onDeliver?: (item: OptimisticDeliveryItem) => void;
+  onArchive?: (item: OptimisticDeliveryItem) => void;
+  onDelete?: (item: OptimisticDeliveryItem) => void;
   className?: string;
 }
 
@@ -47,18 +47,26 @@ export function ItemCard({
   const itemId = `item-${item.id}`;
   const titleId = `${itemId}-title`;
 
+  // Add visual feedback for optimistic updates
+  const isOptimistic = item._optimistic;
+
   return (
     <div
       className={cn(
         'bg-gradient-card-border rounded-lg p-[2px]',
         'hover:shadow-xl hover:shadow-purple-500/20 transition-all duration-200',
+        isOptimistic && 'opacity-70', // Reduced opacity during pending state
         className
       )}
     >
       <Card
-        className="bg-gradient-card border-0 h-full flex flex-col"
+        className={cn(
+          'bg-gradient-card border-0 h-full flex flex-col',
+          isOptimistic && 'pointer-events-none' // Prevent interactions during pending state
+        )}
         role="article"
         aria-labelledby={titleId}
+        aria-busy={isOptimistic}
       >
         <CardHeader className="space-y-3 pb-3">
           {/* Client Name */}
