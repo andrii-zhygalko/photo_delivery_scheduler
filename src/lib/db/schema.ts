@@ -79,3 +79,15 @@ export type NewUserSettings = typeof userSettings.$inferInsert;
 
 export type DeliveryItem = typeof deliveryItems.$inferSelect;
 export type NewDeliveryItem = typeof deliveryItems.$inferInsert;
+
+// Optimistic update types
+export type OptimisticDeliveryItem = DeliveryItem & {
+  _optimistic?: boolean; // Flag for visual feedback during pending operations
+};
+
+export type OptimisticAction =
+  | { type: 'deliver'; itemId: string }
+  | { type: 'archive'; itemId: string }
+  | { type: 'delete'; itemId: string }
+  | { type: 'add'; item: DeliveryItem }
+  | { type: 'update'; itemId: string; updates: Partial<DeliveryItem> };
