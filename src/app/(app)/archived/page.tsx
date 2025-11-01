@@ -50,7 +50,7 @@ export default async function ArchivedPage(props: ArchivedPageProps) {
   });
 
   return (
-    <div className='container py-8 px-4'>
+    <div className='container py-4 px-4'>
       <ArchivedPageClient items={items} userSettings={userSettings} />
     </div>
   );

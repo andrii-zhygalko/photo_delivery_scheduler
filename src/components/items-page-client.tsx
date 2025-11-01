@@ -165,13 +165,18 @@ export function ItemsPageClient({ items, userSettings }: ItemsPageClientProps) {
   return (
     <>
       <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6'>
-        <div>
-          <h1 className='text-3xl font-bold mb-1'>Shoots List</h1>
-          <p className='text-sm text-muted-foreground'>
-            {items.length} {items.length === 1 ? 'shoot' : 'shoots'}
-          </p>
+        <div className='flex justify-between items-center w-full'>
+          <div>
+            <h1 className='text-2xl font-bold mb-0'>My Shoots List</h1>
+            <p className='text-sm text-muted-foreground'>
+              {items.length}{' '}
+              {items.length === 1
+                ? 'shoot to be delivered'
+                : 'shoots to be delivered'}
+            </p>
+          </div>
+          <Button onClick={handleNewItem}>+ New Shoot</Button>
         </div>
-        <Button onClick={handleNewItem}>+ New Shoot</Button>
       </div>
 
       <ItemsList

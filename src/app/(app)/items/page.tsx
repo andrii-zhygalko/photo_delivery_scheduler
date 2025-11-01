@@ -69,7 +69,7 @@ export default async function ItemsPage(props: ItemsPageProps) {
   });
 
   return (
-    <div className='container py-8 px-4'>
+    <div className='container py-4 px-4'>
       <ItemsFilter />
       <ItemsPageClient items={items} userSettings={userSettings} />
     </div>

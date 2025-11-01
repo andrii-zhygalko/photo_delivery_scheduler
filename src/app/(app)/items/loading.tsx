@@ -9,7 +9,7 @@ import { Skeleton } from '@/components/ui/skeleton';
  */
 export default function ItemsLoading() {
   return (
-    <div className='container py-8 px-4'>
+    <div className='container py-4 px-4'>
       {/* Skeleton for ItemsFilter component */}
       <div className='mb-6 space-y-4'>
         {/* Status filter buttons skeleton */}

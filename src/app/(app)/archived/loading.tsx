@@ -9,7 +9,7 @@ import { Skeleton } from '@/components/ui/skeleton';
  */
 export default function ArchivedLoading() {
   return (
-    <div className='container py-8 px-4'>
+    <div className='container py-4 px-4'>
       {/* Header skeleton */}
       <div className='mb-6 space-y-2'>
         <Skeleton className='h-9 w-48 rounded-md' />{' '}
