@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import { getServerSession } from '@/lib/auth/session';
 import { Navbar } from '@/components/navbar';
+import { BottomNav } from '@/components/bottom-nav';
 
 export default async function AppLayout({
   children,
@@ -14,9 +15,14 @@ export default async function AppLayout({
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className='min-h-screen flex flex-col'>
       <Navbar user={session.user} />
-      <main className="flex-1 bg-gradient-page">{children}</main>
+      {/* Add bottom padding on mobile to account for bottom navigation (pb-24 = 96px) */}
+      {/* On desktop (md:), no bottom padding needed (md:pb-0) */}
+      <main className='flex-1 bg-gradient-page pb-20 md:pb-0'>{children}</main>
+
+      {/* Bottom Navigation - Mobile only */}
+      <BottomNav />
     </div>
   );
 }
