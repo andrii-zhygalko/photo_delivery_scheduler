@@ -1,13 +1,18 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState, useTransition, useOptimistic } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { ItemsList } from '@/components/items-list';
 import { ItemDialog } from '@/components/item-dialog';
 import { ConfirmDialog } from '@/components/confirm-dialog';
 import { deleteItemAction } from '@/actions/items';
-import type { DeliveryItem, UserSettings } from '@/lib/db/schema';
+import type {
+  DeliveryItem,
+  UserSettings,
+  OptimisticDeliveryItem,
+  OptimisticAction,
+} from '@/lib/db/schema';
 
 interface ArchivedPageClientProps {
   items: DeliveryItem[];
@@ -38,6 +43,30 @@ export function ArchivedPageClient({
     onConfirm: () => {},
   });
 
+  // Optimistic updates reducer
+  const [optimisticItems, addOptimisticUpdate] = useOptimistic<
+    OptimisticDeliveryItem[],
+    OptimisticAction
+  >(items, (state, action) => {
+    switch (action.type) {
+      case 'delete':
+        return state.filter(item => item.id !== action.itemId);
+      case 'update':
+        // If status is being changed to non-archived, remove from archived list
+        if (action.updates.status && action.updates.status !== 'ARCHIVED') {
+          return state.filter(item => item.id !== action.itemId);
+        }
+        // Otherwise, update the item
+        return state.map(item =>
+          item.id === action.itemId
+            ? { ...item, ...action.updates, _optimistic: true }
+            : item
+        );
+      default:
+        return state;
+    }
+  });
+
   const handleEdit = (item: DeliveryItem) => {
     setSelectedItem(item);
     setDialogOpen(true);
@@ -51,14 +80,20 @@ export function ArchivedPageClient({
       confirmText: 'Delete',
       variant: 'destructive',
       onConfirm: () => {
+        // Close dialog immediately
         setConfirmDialog(prev => ({ ...prev, open: false }));
+
         startTransition(async () => {
+          // Apply optimistic update inside transition
+          addOptimisticUpdate({ type: 'delete', itemId: item.id });
+
           const result = await deleteItemAction(item.id);
           if (result.success) {
             toast.success('Shoot deleted');
             router.refresh();
           } else {
             toast.error(result.error || 'Failed to delete shoot');
+            router.refresh(); // Rollback by syncing with server state
           }
         });
       },
@@ -75,7 +110,7 @@ export function ArchivedPageClient({
       </div>
 
       <ItemsList
-        items={items}
+        items={optimisticItems}
         userTimezone={userSettings.timezone}
         onEdit={handleEdit}
         onDelete={handleDelete}
@@ -86,6 +121,7 @@ export function ArchivedPageClient({
         onOpenChange={setDialogOpen}
         item={selectedItem}
         userSettings={userSettings}
+        onOptimisticUpdate={addOptimisticUpdate}
       />
 
       <ConfirmDialog
