@@ -1,5 +1,7 @@
+import { NextRequest } from 'next/server';
+
 /**
- * Create a mock Request for testing API route handlers
+ * Create a mock NextRequest for testing API route handlers
  * Properly handles body parsing for json() method
  */
 export function createMockRequest(
@@ -8,7 +10,7 @@ export function createMockRequest(
     method?: string;
     body?: unknown;
   }
-): Request {
+): NextRequest {
   const { method = 'GET', body } = options || {};
 
   // Handle body - if it's already a string (from JSON.stringify), use it as-is
@@ -18,8 +20,8 @@ export function createMockRequest(
     bodyString = typeof body === 'string' ? body : JSON.stringify(body);
   }
 
-  // Create a base Request object
-  const request = new Request(url, {
+  // Create a NextRequest object
+  const request = new NextRequest(url, {
     method,
     headers: {
       'Content-Type': 'application/json',
