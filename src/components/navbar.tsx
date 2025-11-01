@@ -52,12 +52,13 @@ export function Navbar({ user }: NavbarProps) {
     <nav
       aria-label='Main navigation'
       className='sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60'>
-      <div className='container px-4 flex h-16 items-center justify-between'>
+      <div className='container px-4 flex h-12 items-center justify-between'>
         <div className='flex items-center gap-6'>
           <Link href='/items' className='text-lg font-semibold'>
             Photo Delivery
           </Link>
 
+          {/* Desktop Navigation - hidden on mobile */}
           <div className='hidden md:flex gap-4'>
             {links.map(link => (
               <Link
@@ -76,6 +77,7 @@ export function Navbar({ user }: NavbarProps) {
           </div>
         </div>
 
+        {/* User Menu - Desktop only */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button
@@ -101,14 +103,6 @@ export function Navbar({ user }: NavbarProps) {
               <p className='text-xs text-muted-foreground'>{user.email}</p>
             </div>
             <DropdownMenuSeparator />
-            <div className='md:hidden'>
-              {links.map(link => (
-                <DropdownMenuItem key={link.href} asChild>
-                  <Link href={link.href}>{link.label}</Link>
-                </DropdownMenuItem>
-              ))}
-              <DropdownMenuSeparator />
-            </div>
             <DropdownMenuItem
               onClick={() => signOut({ callbackUrl: '/' })}
               className='cursor-pointer'>
