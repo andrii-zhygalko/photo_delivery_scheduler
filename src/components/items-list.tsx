@@ -19,6 +19,7 @@ export function ItemsList({
   items,
   userTimezone,
   isLoading = false,
+  // isLoading = true,
   onEdit,
   onDeliver,
   onArchive,
