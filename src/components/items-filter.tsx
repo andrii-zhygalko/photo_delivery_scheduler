@@ -35,7 +35,7 @@ export function ItemsFilter() {
   };
 
   return (
-    <div className='flex justify-between flex-wrap gap-3 mb-3'>
+    <div className='flex justify-between md:justify-start flex-wrap gap-3 mb-3'>
       <div className=''>
         <label htmlFor='status-filter' className='sr-only'>
           Filter by status

@@ -52,14 +52,14 @@ export function Navbar({ user }: NavbarProps) {
     <nav
       aria-label='Main navigation'
       className='sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60'>
-      <div className='container px-4 flex h-12 items-center justify-between'>
-        <div className='flex items-center gap-6'>
+      <div className='container px-4 flex h-12 items-center justify-center mx-auto'>
+        <div className='flex items-center gap-6 flex-grow'>
           <Link href='/items' className='text-lg font-semibold'>
             Photo Delivery
           </Link>
 
           {/* Desktop Navigation - hidden on mobile */}
-          <div className='hidden md:flex gap-4'>
+          <div className='hidden md:flex gap-4 mx-auto'>
             {links.map(link => (
               <Link
                 key={link.href}
