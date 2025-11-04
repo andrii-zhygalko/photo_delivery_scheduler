@@ -36,14 +36,14 @@ export function ItemsFilter() {
 
   return (
     <div className='flex justify-between md:justify-start flex-wrap gap-3 mb-3'>
-      <div className=''>
+      <div className='w-[180px]'>
         <label htmlFor='status-filter' className='sr-only'>
           Filter by status
         </label>
         <Select
           value={currentStatus}
           onValueChange={v => updateParam('status', v)}>
-          <SelectTrigger id='status-filter' aria-label='Filter by status'>
+          <SelectTrigger id='status-filter' aria-label='Filter by status' className='w-full'>
             <SelectValue placeholder='Filter by status' />
           </SelectTrigger>
           <SelectContent>
@@ -55,12 +55,12 @@ export function ItemsFilter() {
         </Select>
       </div>
 
-      <div className=''>
+      <div className='w-[180px]'>
         <label htmlFor='sort-filter' className='sr-only'>
           Sort by
         </label>
         <Select value={currentSort} onValueChange={v => updateParam('sort', v)}>
-          <SelectTrigger id='sort-filter' aria-label='Sort by'>
+          <SelectTrigger id='sort-filter' aria-label='Sort by' className='w-full'>
             <SelectValue placeholder='Sort by' />
           </SelectTrigger>
           <SelectContent>

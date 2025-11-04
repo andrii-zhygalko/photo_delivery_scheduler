@@ -1,9 +1,11 @@
+import { Suspense } from 'react';
 import { redirect } from 'next/navigation';
 import { getServerSession } from '@/lib/auth/session';
 import { db } from '@/lib/db';
 import { getUserSettings, getItemsForUser } from '@/lib/db/queries';
 import { ItemsFilter } from '@/components/items-filter';
 import { ItemsPageClient } from '@/components/items-page-client';
+import { FilterSkeleton } from '@/components/filter-skeleton';
 import { sql } from 'drizzle-orm';
 import type { DeliveryItem } from '@/lib/db/schema';
 
@@ -70,7 +72,9 @@ export default async function ItemsPage(props: ItemsPageProps) {
 
   return (
     <div className='container py-4 px-4'>
-      <ItemsFilter />
+      <Suspense fallback={<FilterSkeleton />}>
+        <ItemsFilter />
+      </Suspense>
       <ItemsPageClient items={items} userSettings={userSettings} />
     </div>
   );
