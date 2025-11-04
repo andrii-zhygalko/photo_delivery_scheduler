@@ -19,7 +19,7 @@ export default async function AppLayout({
       <Navbar user={session.user} />
       {/* Add bottom padding on mobile to account for bottom navigation (pb-24 = 96px) */}
       {/* On desktop (md:), no bottom padding needed (md:pb-0) */}
-      <main className='flex-1 bg-gradient-page pb-20 md:pb-0'>{children}</main>
+      <main className='flex-1 w-full bg-gradient-page pb-20 md:pb-0 flex justify-center'>{children}</main>
 
       {/* Bottom Navigation - Mobile only */}
       <BottomNav />
