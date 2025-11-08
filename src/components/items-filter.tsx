@@ -18,7 +18,11 @@ interface ItemsFilterProps {
   currentOrder: 'asc' | 'desc';
 }
 
-export function ItemsFilter({ currentStatus, currentSort, currentOrder }: ItemsFilterProps) {
+export function ItemsFilter({
+  currentStatus,
+  currentSort,
+  currentOrder,
+}: ItemsFilterProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -122,9 +126,7 @@ export function ItemsFilter({ currentStatus, currentSort, currentOrder }: ItemsF
             id='sort-filter'
             aria-label='Sort by'
             className='w-full'>
-            <SelectValue>
-              {sortLabels[optimisticSort] || 'Sort by'}
-            </SelectValue>
+            <SelectValue>{sortLabels[optimisticSort] || 'Sort by'}</SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value='deadline'>Deadline</SelectItem>
@@ -143,7 +145,7 @@ export function ItemsFilter({ currentStatus, currentSort, currentOrder }: ItemsF
           optimisticOrder === 'asc' ? 'ascending' : 'descending'
         }`}
         title={optimisticOrder === 'asc' ? 'Ascending' : 'Descending'}
-        className='shrink-0'>
+        className='shrink-0 bg-muted/30 shadow-sm'>
         <ArrowUpDown className='h-4 w-4' aria-hidden='true' />
       </Button>
     </div>
