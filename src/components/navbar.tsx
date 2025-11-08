@@ -49,17 +49,25 @@ export function Navbar({ user }: NavbarProps) {
   };
 
   return (
-    <nav
-      aria-label='Main navigation'
-      className='sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60'>
-      <div className='container px-4 flex h-12 items-center justify-center mx-auto'>
-        <div className='flex items-center gap-6 flex-grow'>
-          <Link href='/items' className='text-lg font-semibold'>
-            Photo Delivery
-          </Link>
+    <header className='sticky top-0 z-50 w-full border-b border-border/40 backdrop-blur supports-[backdrop-filter]:bg-background/60'>
+      {/* Gradient overlay - top to bottom, fading to transparent */}
+      <div className='absolute inset-0 bg-gradient-to-b from-violet-300 via-purple-200 to-violet-100 dark:from-violet-950/30 dark:via-purple-950/20 dark:to-violet-950/30 pointer-events-none' />
+
+      <div className='container relative px-4 py-3 mx-auto'>
+        <div className='flex items-center justify-between'>
+          {/* Logo and Title */}
+          <div className='flex items-center gap-3'>
+            <h1 className='text-2xl font-bold tracking-tight text-foreground/85 font-[family-name:var(--font-poetsen)]'>
+              <Link
+                href='/items'
+                className='hover:text-primary transition-colors'>
+                Photo Delivery
+              </Link>
+            </h1>
+          </div>
 
           {/* Desktop Navigation - hidden on mobile */}
-          <div className='hidden md:flex gap-4 mx-auto'>
+          <div className='hidden md:flex gap-4'>
             {links.map(link => (
               <Link
                 key={link.href}
@@ -75,42 +83,45 @@ export function Navbar({ user }: NavbarProps) {
               </Link>
             ))}
           </div>
-        </div>
 
-        {/* User Menu - Desktop only */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button
-              className='rounded-full focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2'
-              aria-label='User menu'>
-              <Avatar>
-                <AvatarImage
-                  src={user.image || undefined}
-                  alt={`${user.name || user.email || 'User'}'s profile picture`}
-                />
-                <AvatarFallback
-                  aria-label={`${
-                    user.name || user.email || 'User'
-                  } (initials)`}>
-                  {getInitials()}
-                </AvatarFallback>
-              </Avatar>
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align='end' className='w-56'>
-            <div className='px-2 py-1.5 text-sm'>
-              <p className='font-medium'>{user.name}</p>
-              <p className='text-xs text-muted-foreground'>{user.email}</p>
-            </div>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() => signOut({ callbackUrl: '/' })}
-              className='cursor-pointer'>
-              Sign out
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+          {/* User Avatar */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                className='rounded-full focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2'
+                aria-label='User menu'>
+                <Avatar className='h-10 w-10 ring-2 ring-primary/10 ring-offset-2 ring-offset-background'>
+                  <AvatarImage
+                    src={user.image || undefined}
+                    alt={`${
+                      user.name || user.email || 'User'
+                    }'s profile picture`}
+                  />
+                  <AvatarFallback
+                    className='bg-gradient-to-br from-primary/10 to-primary/5 text-primary'
+                    aria-label={`${
+                      user.name || user.email || 'User'
+                    } (initials)`}>
+                    {getInitials()}
+                  </AvatarFallback>
+                </Avatar>
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align='end' className='w-56'>
+              <div className='px-2 py-1.5 text-sm'>
+                <p className='font-medium'>{user.name}</p>
+                <p className='text-xs text-muted-foreground'>{user.email}</p>
+              </div>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={() => signOut({ callbackUrl: '/' })}
+                className='cursor-pointer'>
+                Sign out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
-    </nav>
+    </header>
   );
 }
