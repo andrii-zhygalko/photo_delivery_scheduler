@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { useTransition, useState, useEffect } from 'react';
 import {
   Select,
   SelectContent,
@@ -19,6 +20,25 @@ interface ItemsFilterProps {
 
 export function ItemsFilter({ currentStatus, currentSort, currentOrder }: ItemsFilterProps) {
   const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+
+  // Local state for optimistic UI updates
+  const [optimisticStatus, setOptimisticStatus] = useState(currentStatus);
+  const [optimisticSort, setOptimisticSort] = useState(currentSort);
+  const [optimisticOrder, setOptimisticOrder] = useState(currentOrder);
+
+  // Sync local state when props update from server
+  useEffect(() => {
+    setOptimisticStatus(currentStatus);
+  }, [currentStatus]);
+
+  useEffect(() => {
+    setOptimisticSort(currentSort);
+  }, [currentSort]);
+
+  useEffect(() => {
+    setOptimisticOrder(currentOrder);
+  }, [currentOrder]);
 
   // Map values to display labels (prevents Radix SSR hydration flash)
   const statusLabels: Record<string, string> = {
@@ -35,6 +55,15 @@ export function ItemsFilter({ currentStatus, currentSort, currentOrder }: ItemsF
   };
 
   const updateParam = (key: string, value: string) => {
+    // Update optimistic state immediately
+    if (key === 'status') {
+      setOptimisticStatus(value);
+    } else if (key === 'sort') {
+      setOptimisticSort(value);
+    } else if (key === 'order') {
+      setOptimisticOrder(value as 'asc' | 'desc');
+    }
+
     // Use window.location.search to construct params (per Next.js docs optimization)
     const params = new URLSearchParams(window.location.search);
     if (value === 'all' || value === '') {
@@ -42,11 +71,15 @@ export function ItemsFilter({ currentStatus, currentSort, currentOrder }: ItemsF
     } else {
       params.set(key, value);
     }
-    router.push(`?${params.toString()}`);
+
+    // Wrap router.push in transition for better UX
+    startTransition(() => {
+      router.push(`?${params.toString()}`);
+    });
   };
 
   const toggleOrder = () => {
-    const newOrder = currentOrder === 'asc' ? 'desc' : 'asc';
+    const newOrder = optimisticOrder === 'asc' ? 'desc' : 'asc';
     updateParam('order', newOrder);
   };
 
@@ -57,14 +90,15 @@ export function ItemsFilter({ currentStatus, currentSort, currentOrder }: ItemsF
           Filter by status
         </label>
         <Select
-          value={currentStatus}
-          onValueChange={v => updateParam('status', v)}>
+          value={optimisticStatus}
+          onValueChange={v => updateParam('status', v)}
+          disabled={isPending}>
           <SelectTrigger
             id='status-filter'
             aria-label='Filter by status'
             className='w-full'>
             <SelectValue>
-              {statusLabels[currentStatus] || 'Filter by status'}
+              {statusLabels[optimisticStatus] || 'Filter by status'}
             </SelectValue>
           </SelectTrigger>
           <SelectContent>
@@ -80,13 +114,16 @@ export function ItemsFilter({ currentStatus, currentSort, currentOrder }: ItemsF
         <label htmlFor='sort-filter' className='sr-only'>
           Sort by
         </label>
-        <Select value={currentSort} onValueChange={v => updateParam('sort', v)}>
+        <Select
+          value={optimisticSort}
+          onValueChange={v => updateParam('sort', v)}
+          disabled={isPending}>
           <SelectTrigger
             id='sort-filter'
             aria-label='Sort by'
             className='w-full'>
             <SelectValue>
-              {sortLabels[currentSort] || 'Sort by'}
+              {sortLabels[optimisticSort] || 'Sort by'}
             </SelectValue>
           </SelectTrigger>
           <SelectContent>
@@ -101,10 +138,11 @@ export function ItemsFilter({ currentStatus, currentSort, currentOrder }: ItemsF
         variant='outline'
         size='icon'
         onClick={toggleOrder}
+        disabled={isPending}
         aria-label={`Toggle sort order: currently ${
-          currentOrder === 'asc' ? 'ascending' : 'descending'
+          optimisticOrder === 'asc' ? 'ascending' : 'descending'
         }`}
-        title={currentOrder === 'asc' ? 'Ascending' : 'Descending'}
+        title={optimisticOrder === 'asc' ? 'Ascending' : 'Descending'}
         className='shrink-0'>
         <ArrowUpDown className='h-4 w-4' aria-hidden='true' />
       </Button>
