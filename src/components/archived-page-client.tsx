@@ -102,7 +102,8 @@ export function ArchivedPageClient({
 
   return (
     <>
-      <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6'>
+      {/* Page Header with animation */}
+      <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 animate-fade-in-up stagger-1'>
         <div className='flex justify-between items-center w-full'>
           <div>
             <h1 className='text-2xl font-bold mb-0'>Archived Shoots</h1>
@@ -113,12 +114,15 @@ export function ArchivedPageClient({
         </div>
       </div>
 
-      <ItemsList
-        items={optimisticItems}
-        userTimezone={userSettings.timezone}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-      />
+      {/* Items List with staggered animation wrapper */}
+      <div className='animate-fade-in-up stagger-2'>
+        <ItemsList
+          items={optimisticItems}
+          userTimezone={userSettings.timezone}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+        />
+      </div>
 
       <ItemDialog
         open={dialogOpen}

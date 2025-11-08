@@ -46,19 +46,21 @@ export default async function SettingsPage() {
   return (
     <div className='container max-w-2xl py-8 px-4'>
       <div className='space-y-6'>
-        {/* Header */}
-        <div>
+        {/* Header with animation */}
+        <div className='animate-fade-in-up stagger-1'>
           <h1 className='text-3xl font-bold'>Settings</h1>
           <p className='text-muted-foreground mt-2'>
             Manage your default deadline settings and timezone preferences
           </p>
         </div>
 
-        {/* Settings Form */}
-        <SettingsPageClient
-          currentSettings={userSettings}
-          itemCount={itemCount}
-        />
+        {/* Settings Form with animation */}
+        <div className='animate-fade-in-up stagger-2'>
+          <SettingsPageClient
+            currentSettings={userSettings}
+            itemCount={itemCount}
+          />
+        </div>
       </div>
     </div>
   );

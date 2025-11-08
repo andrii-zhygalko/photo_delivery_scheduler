@@ -164,7 +164,8 @@ export function ItemsPageClient({ items, userSettings }: ItemsPageClientProps) {
 
   return (
     <>
-      <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6'>
+      {/* Page Header with animation */}
+      <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 animate-fade-in-up stagger-1'>
         <div className='flex justify-between items-center w-full'>
           <div>
             <h1 className='text-2xl font-bold mb-0'>My Shoots List</h1>
@@ -175,18 +176,21 @@ export function ItemsPageClient({ items, userSettings }: ItemsPageClientProps) {
                 : 'shoots to be delivered'}
             </p>
           </div>
-          <Button onClick={handleNewItem}>+ New Shoot</Button>
+          <Button onClick={handleNewItem} className='animate-fade-in-up stagger-2'>+ New Shoot</Button>
         </div>
       </div>
 
-      <ItemsList
-        items={optimisticItems}
-        userTimezone={userSettings.timezone}
-        onEdit={handleEdit}
-        onDeliver={handleDeliver}
-        onArchive={handleArchive}
-        onDelete={handleDelete}
-      />
+      {/* Items List with staggered animation wrapper */}
+      <div className='animate-fade-in-up stagger-3'>
+        <ItemsList
+          items={optimisticItems}
+          userTimezone={userSettings.timezone}
+          onEdit={handleEdit}
+          onDeliver={handleDeliver}
+          onArchive={handleArchive}
+          onDelete={handleDelete}
+        />
+      </div>
 
       <ItemDialog
         open={dialogOpen}
