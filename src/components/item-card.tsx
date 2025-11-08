@@ -12,6 +12,7 @@ import { DeadlineBadge } from '@/components/deadline-badge';
 import { formatDeadline } from '@/lib/date-utils';
 import type { OptimisticDeliveryItem } from '@/lib/db/schema';
 import {
+  Camera,
   CalendarIcon,
   Edit2Icon,
   CheckCircle2Icon,
@@ -77,7 +78,7 @@ export function ItemCard({
         role='article'
         aria-labelledby={titleId}
         aria-busy={isOptimistic}>
-        <CardHeader className='space-y-3 pb-3'>
+        <CardHeader className='space-y-2 pb-3'>
           {/* Client Name */}
           <div className='flex items-start justify-between gap-2'>
             <h3
@@ -91,16 +92,25 @@ export function ItemCard({
           {/* Dates Section */}
           <div className='space-y-2'>
             <div className='flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400'>
-              <CalendarIcon className='h-4 w-4' aria-hidden='true' />
+              <Camera className='h-4 w-4' aria-hidden='true' />
               <span>
-                <span className='sr-only'>Shoot date: </span>
-                <time dateTime={item.shoot_date}>{formattedShootDate}</time>
+                {/* <span className='sr-only'>Shoot date: </span> */}
+                <span className='text-sm text-slate-600 dark:text-slate-400'>
+                  Shoot date:
+                </span>
+                <time dateTime={item.shoot_date}> {formattedShootDate}</time>
               </span>
             </div>
             <div className='flex items-center justify-between gap-2'>
-              <span className='text-sm text-slate-600 dark:text-slate-400'>
-                Deadline: {formattedDeadline}
-              </span>
+              <div className='flex gap-2 items-center'>
+                <CalendarIcon
+                  className='h-4 w-4 justify-self-start'
+                  aria-hidden='true'
+                />
+                <span className='text-sm text-slate-600 dark:text-slate-400'>
+                  Deadline: {formattedDeadline}
+                </span>
+              </div>
               <DeadlineBadge
                 computedDeadline={item.computed_deadline}
                 customDeadline={item.custom_deadline}
