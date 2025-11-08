@@ -49,7 +49,10 @@ export function ItemDialog({
       formData.append('client_name', data.client_name);
       formData.append('shoot_date', data.shoot_date);
       formData.append('notes', data.notes || '');
-      formData.append('use_custom_deadline', data.use_custom_deadline.toString());
+      formData.append(
+        'use_custom_deadline',
+        data.use_custom_deadline.toString()
+      );
 
       if (data.use_custom_deadline && data.custom_deadline) {
         formData.append('custom_deadline', data.custom_deadline);
@@ -70,9 +73,10 @@ export function ItemDialog({
                 shoot_date: data.shoot_date,
                 notes: data.notes || null,
                 status: data.status,
-                custom_deadline: data.use_custom_deadline && data.custom_deadline
-                  ? new Date(data.custom_deadline)
-                  : null,
+                custom_deadline:
+                  data.use_custom_deadline && data.custom_deadline
+                    ? new Date(data.custom_deadline)
+                    : null,
               },
             });
           }
@@ -114,20 +118,18 @@ export function ItemDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px] max-sm:h-[100vh] max-sm:max-w-full max-sm:rounded-none overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>
-            {isEditMode ? 'Edit Delivery Item' : 'New Delivery Item'}
-          </DialogTitle>
+      <DialogContent className='sm:max-w-[600px] max-sm:h-[100vh] max-sm:max-w-full max-sm:rounded-none overflow-y-auto !flex !flex-col gap-4'>
+        <DialogHeader className='-mx-6 -mt-6 px-6 pt-6 pb-4 mb-2 bg-gradient-to-br from-purple-50 via-blue-50 to-purple-50 dark:from-purple-950/30 dark:via-blue-950/20 dark:to-purple-950/30 border-b border-purple-100 dark:border-purple-900/30'>
+          <DialogTitle>{isEditMode ? 'Edit Shoot' : 'New Shoot'}</DialogTitle>
           <DialogDescription>
             {isEditMode
-              ? 'Update the details of your delivery item.'
-              : 'Create a new delivery item to track a photo shoot deadline.'}
+              ? 'Update the details of your shoot.'
+              : 'Create a new shoot to track a deadline.'}
           </DialogDescription>
         </DialogHeader>
 
         {error && (
-          <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
+          <div className='rounded-md bg-destructive/10 p-3 text-sm text-destructive'>
             {error}
           </div>
         )}
