@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import {
   Select,
   SelectContent,
@@ -11,16 +11,32 @@ import {
 import { Button } from '@/components/ui/button';
 import { ArrowUpDown } from 'lucide-react';
 
-export function ItemsFilter() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
+interface ItemsFilterProps {
+  currentStatus: string;
+  currentSort: string;
+  currentOrder: 'asc' | 'desc';
+}
 
-  const currentStatus = searchParams.get('status') || 'all';
-  const currentSort = searchParams.get('sort') || 'deadline';
-  const currentOrder = searchParams.get('order') || 'asc';
+export function ItemsFilter({ currentStatus, currentSort, currentOrder }: ItemsFilterProps) {
+  const router = useRouter();
+
+  // Map values to display labels (prevents Radix SSR hydration flash)
+  const statusLabels: Record<string, string> = {
+    all: 'All Statuses',
+    TO_DO: 'To Do',
+    EDITING: 'Editing',
+    DELIVERED: 'Delivered',
+  };
+
+  const sortLabels: Record<string, string> = {
+    deadline: 'Deadline',
+    shoot_date: 'Shoot Date',
+    created_at: 'Created Date',
+  };
 
   const updateParam = (key: string, value: string) => {
-    const params = new URLSearchParams(searchParams.toString());
+    // Use window.location.search to construct params (per Next.js docs optimization)
+    const params = new URLSearchParams(window.location.search);
     if (value === 'all' || value === '') {
       params.delete(key);
     } else {
@@ -35,7 +51,7 @@ export function ItemsFilter() {
   };
 
   return (
-    <div className='flex justify-between md:justify-start flex-wrap gap-3 mb-3'>
+    <div className='flex justify-between md:justify-start gap-3 mb-3'>
       <div className='w-[180px]'>
         <label htmlFor='status-filter' className='sr-only'>
           Filter by status
@@ -43,8 +59,13 @@ export function ItemsFilter() {
         <Select
           value={currentStatus}
           onValueChange={v => updateParam('status', v)}>
-          <SelectTrigger id='status-filter' aria-label='Filter by status' className='w-full'>
-            <SelectValue placeholder='Filter by status' />
+          <SelectTrigger
+            id='status-filter'
+            aria-label='Filter by status'
+            className='w-full'>
+            <SelectValue>
+              {statusLabels[currentStatus] || 'Filter by status'}
+            </SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value='all'>All Statuses</SelectItem>
@@ -60,8 +81,13 @@ export function ItemsFilter() {
           Sort by
         </label>
         <Select value={currentSort} onValueChange={v => updateParam('sort', v)}>
-          <SelectTrigger id='sort-filter' aria-label='Sort by' className='w-full'>
-            <SelectValue placeholder='Sort by' />
+          <SelectTrigger
+            id='sort-filter'
+            aria-label='Sort by'
+            className='w-full'>
+            <SelectValue>
+              {sortLabels[currentSort] || 'Sort by'}
+            </SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value='deadline'>Deadline</SelectItem>

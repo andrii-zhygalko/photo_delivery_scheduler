@@ -8,7 +8,7 @@ import { Skeleton } from '@/components/ui/skeleton';
  */
 export function FilterSkeleton() {
   return (
-    <div className='flex justify-between md:justify-start flex-wrap gap-3 mb-3'>
+    <div className='flex justify-between md:justify-start gap-3 mb-3'>
       {/* Status filter skeleton - matches Select min-width */}
       <Skeleton className='h-10 w-[180px] rounded-md' />
 

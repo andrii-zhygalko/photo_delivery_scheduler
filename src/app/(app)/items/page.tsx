@@ -1,11 +1,9 @@
-import { Suspense } from 'react';
 import { redirect } from 'next/navigation';
 import { getServerSession } from '@/lib/auth/session';
 import { db } from '@/lib/db';
 import { getUserSettings, getItemsForUser } from '@/lib/db/queries';
 import { ItemsFilter } from '@/components/items-filter';
 import { ItemsPageClient } from '@/components/items-page-client';
-import { FilterSkeleton } from '@/components/filter-skeleton';
 import { sql } from 'drizzle-orm';
 import type { DeliveryItem } from '@/lib/db/schema';
 
@@ -28,6 +26,11 @@ export default async function ItemsPage(props: ItemsPageProps) {
 
   // Await searchParams (Next.js 15 requirement)
   const searchParams = await props.searchParams;
+
+  // Parse filter values for passing to client components
+  const currentStatus = searchParams.status || 'all';
+  const currentSort = (searchParams.sort as string) || 'deadline';
+  const currentOrder = (searchParams.order as 'asc' | 'desc') || 'asc';
 
   // Fetch data within RLS transaction
   const { items, userSettings } = await db.transaction(async tx => {
@@ -72,9 +75,11 @@ export default async function ItemsPage(props: ItemsPageProps) {
 
   return (
     <div className='container py-4 px-4'>
-      <Suspense fallback={<FilterSkeleton />}>
-        <ItemsFilter />
-      </Suspense>
+      <ItemsFilter
+        currentStatus={currentStatus}
+        currentSort={currentSort}
+        currentOrder={currentOrder}
+      />
       <ItemsPageClient items={items} userSettings={userSettings} />
     </div>
   );
