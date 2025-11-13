@@ -37,9 +37,6 @@ export default async function ItemsPage(props: ItemsPageProps) {
     // Set GUC for RLS
     await tx.execute(sql.raw(`SET LOCAL app.user_id = '${userId}'`));
 
-    // Fetch user settings
-    const settings = await getUserSettings(userId, tx);
-
     // Parse and validate status filter
     const statusFilter =
       searchParams.status === 'TO_DO' ||
@@ -49,16 +46,19 @@ export default async function ItemsPage(props: ItemsPageProps) {
         ? searchParams.status
         : undefined;
 
-    // Fetch items with filters
-    const itemsList = await getItemsForUser(
-      userId,
-      {
-        status: statusFilter,
-        sort: searchParams.sort,
-        order: searchParams.order,
-      },
-      tx
-    );
+    // Parallelize database queries for better performance
+    const [settings, itemsList] = await Promise.all([
+      getUserSettings(userId, tx),
+      getItemsForUser(
+        userId,
+        {
+          status: statusFilter,
+          sort: searchParams.sort,
+          order: searchParams.order,
+        },
+        tx
+      ),
+    ]);
 
     // Filter out archived items unless explicitly filtering for them
     const filteredItems = itemsList.filter((item: DeliveryItem) =>

@@ -29,19 +29,19 @@ export default async function ArchivedPage(props: ArchivedPageProps) {
     // Set GUC for RLS
     await tx.execute(sql.raw(`SET LOCAL app.user_id = '${userId}'`));
 
-    // Fetch user settings
-    const settings = await getUserSettings(userId, tx);
-
-    // Fetch only archived items
-    const itemsList = await getItemsForUser(
-      userId,
-      {
-        status: 'ARCHIVED',
-        sort: searchParams.sort,
-        order: searchParams.order,
-      },
-      tx
-    );
+    // Parallelize database queries for better performance
+    const [settings, itemsList] = await Promise.all([
+      getUserSettings(userId, tx),
+      getItemsForUser(
+        userId,
+        {
+          status: 'ARCHIVED',
+          sort: searchParams.sort,
+          order: searchParams.order,
+        },
+        tx
+      ),
+    ]);
 
     return {
       items: itemsList,
