@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -56,7 +57,19 @@ export function Navbar({ user }: NavbarProps) {
       <div className='container relative px-4 py-3 mx-auto'>
         <div className='flex items-center justify-between'>
           {/* Logo and Title */}
-          <div className='flex items-center gap-3'>
+          <div className='flex items-center gap-1'>
+            <Link
+              href='/items'
+              className='transition-transform hover:scale-105'
+              aria-label='Go to home'>
+              <Image
+                src='/pds_logo_256.webp'
+                alt='Photo Delivery Scheduler Logo'
+                width={40}
+                height={40}
+                className='h-10 w-10'
+              />
+            </Link>
             <h1 className='text-2xl font-bold tracking-tight text-foreground/85 font-[family-name:var(--font-poetsen)]'>
               <Link
                 href='/items'
