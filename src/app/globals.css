@@ -73,6 +73,18 @@
       opacity: 1;
     }
   }
+
+  @keyframes aurora {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
 }
 
 :root {
@@ -262,6 +274,10 @@
     opacity: 0;
   }
 
+  .animate-aurora {
+    animation: aurora ease-in-out infinite;
+  }
+
   /* Stagger delay utilities */
   .stagger-1 {
     animation-delay: 50ms;
@@ -315,7 +331,8 @@
   @media (prefers-reduced-motion: reduce) {
     .animate-fade-in-up,
     .animate-fade-in,
-    .animate-slide-up {
+    .animate-slide-up,
+    .animate-aurora {
       animation: none;
       opacity: 1;
       transform: none;
