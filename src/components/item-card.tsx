@@ -111,12 +111,27 @@ export function ItemCard({
                   Deadline: {formattedDeadline}
                 </span>
               </div>
-              <DeadlineBadge
-                computedDeadline={item.computed_deadline}
-                customDeadline={item.custom_deadline}
-                userTimezone={userTimezone}
-              />
+              {/* Only show deadline countdown for active items (not delivered/archived) */}
+              {item.status !== 'DELIVERED' && item.status !== 'ARCHIVED' && (
+                <DeadlineBadge
+                  computedDeadline={item.computed_deadline}
+                  customDeadline={item.custom_deadline}
+                  userTimezone={userTimezone}
+                />
+              )}
             </div>
+            {/* Delivered Date (shown for delivered and archived items) */}
+            {(item.status === 'DELIVERED' || item.status === 'ARCHIVED') && item.delivered_at && (
+              <div className='flex items-center gap-2 text-sm text-green-700 dark:text-green-400'>
+                <CheckCircle2Icon className='h-4 w-4' aria-hidden='true' />
+                <span>
+                  Delivered on{' '}
+                  <time dateTime={typeof item.delivered_at === 'string' ? item.delivered_at : item.delivered_at.toISOString()}>
+                    {formatDeadline(item.delivered_at, userTimezone)}
+                  </time>
+                </span>
+              </div>
+            )}
           </div>
         </CardHeader>
 
