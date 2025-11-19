@@ -17,6 +17,7 @@ import {
   Edit2Icon,
   CheckCircle2Icon,
   ArchiveIcon,
+  ArchiveRestoreIcon,
   Trash2Icon,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -27,6 +28,7 @@ interface ItemCardProps {
   onEdit?: (item: OptimisticDeliveryItem) => void;
   onDeliver?: (item: OptimisticDeliveryItem) => void;
   onArchive?: (item: OptimisticDeliveryItem) => void;
+  onUnarchive?: (item: OptimisticDeliveryItem) => void;
   onDelete?: (item: OptimisticDeliveryItem) => void;
   className?: string;
 }
@@ -47,6 +49,7 @@ export function ItemCard({
   onEdit,
   onDeliver,
   onArchive,
+  onUnarchive,
   onDelete,
   className,
 }: ItemCardProps) {
@@ -112,7 +115,7 @@ export function ItemCard({
                 </span>
               </div>
               {/* Only show deadline countdown for active items (not delivered/archived) */}
-              {item.status !== 'DELIVERED' && item.status !== 'ARCHIVED' && (
+              {!item.is_archived && item.status !== 'DELIVERED' && (
                 <DeadlineBadge
                   computedDeadline={item.computed_deadline}
                   customDeadline={item.custom_deadline}
@@ -120,8 +123,8 @@ export function ItemCard({
                 />
               )}
             </div>
-            {/* Delivered Date (shown for delivered and archived items) */}
-            {(item.status === 'DELIVERED' || item.status === 'ARCHIVED') && item.delivered_at && (
+            {/* Delivered Date (shown for delivered items) */}
+            {item.status === 'DELIVERED' && item.delivered_at && (
               <div className='flex items-center gap-2 text-sm text-green-700 dark:text-green-400'>
                 <CheckCircle2Icon className='h-4 w-4' aria-hidden='true' />
                 <span>
@@ -146,8 +149,8 @@ export function ItemCard({
 
         {/* Action Buttons */}
         <CardFooter className='pt-3 flex gap-2'>
-          {item.status !== 'DELIVERED' &&
-            item.status !== 'ARCHIVED' &&
+          {!item.is_archived &&
+            item.status !== 'DELIVERED' &&
             onDeliver && (
               <Button
                 size='sm'
@@ -160,7 +163,7 @@ export function ItemCard({
               </Button>
             )}
 
-          {item.status !== 'ARCHIVED' && onArchive && (
+          {!item.is_archived && onArchive && (
             <Button
               size='sm'
               variant='outline'
@@ -169,6 +172,18 @@ export function ItemCard({
               aria-label={`Archive ${item.client_name}`}>
               <ArchiveIcon className='h-4 w-4' aria-hidden='true' />
               Archive
+            </Button>
+          )}
+
+          {item.is_archived && onUnarchive && (
+            <Button
+              size='sm'
+              variant='outline'
+              onClick={() => onUnarchive(item)}
+              className='flex items-center gap-1'
+              aria-label={`Unarchive ${item.client_name}`}>
+              <ArchiveRestoreIcon className='h-4 w-4' aria-hidden='true' />
+              Unarchive
             </Button>
           )}
 
