@@ -102,8 +102,7 @@ export async function updateItemAction(
       status: formData.get('status') as
         | 'TO_DO'
         | 'EDITING'
-        | 'DELIVERED'
-        | 'ARCHIVED',
+        | 'DELIVERED',
       custom_deadline:
         formData.get('use_custom_deadline') === 'true'
           ? (formData.get('custom_deadline') as string) || null
@@ -117,7 +116,7 @@ export async function updateItemAction(
       client_name?: string;
       shoot_date?: string;
       notes?: string | null;
-      status?: 'TO_DO' | 'EDITING' | 'DELIVERED' | 'ARCHIVED';
+      status?: 'TO_DO' | 'EDITING' | 'DELIVERED';
       custom_deadline?: Date | null;
       updated_at: Date;
     } = {
@@ -197,7 +196,7 @@ export async function deliverItemAction(
 }
 
 /**
- * Archive an item
+ * Archive an item (move to Archive page)
  * Server Action called from quick action button
  */
 export async function archiveItemAction(
@@ -219,7 +218,7 @@ export async function archiveItemAction(
       await tx
         .update(deliveryItems)
         .set({
-          status: 'ARCHIVED',
+          is_archived: true,
           updated_at: new Date(),
         })
         .where(eq(deliveryItems.id, itemId));
@@ -236,6 +235,49 @@ export async function archiveItemAction(
       return { success: false, error: error.message };
     }
     return { success: false, error: 'Failed to archive item' };
+  }
+}
+
+/**
+ * Unarchive an item (move back to Items page)
+ * Server Action called from quick action button
+ */
+export async function unarchiveItemAction(
+  itemId: string
+): Promise<ActionResult> {
+  try {
+    // 1. Check authentication
+    const session = await getServerSession();
+    if (!session?.user?.id) {
+      return { success: false, error: 'You must be signed in' };
+    }
+
+    const userId = session.user.id;
+
+    // 2. Update with RLS context
+    await db.transaction(async (tx) => {
+      await tx.execute(sql.raw(`SET LOCAL app.user_id = '${userId}'`));
+
+      await tx
+        .update(deliveryItems)
+        .set({
+          is_archived: false,
+          updated_at: new Date(),
+        })
+        .where(eq(deliveryItems.id, itemId));
+    });
+
+    // 3. Revalidate pages
+    revalidatePath('/items');
+    revalidatePath('/archived');
+
+    return { success: true, data: undefined };
+  } catch (error) {
+    console.error('Unarchive item error:', error);
+    if (error instanceof Error) {
+      return { success: false, error: error.message };
+    }
+    return { success: false, error: 'Failed to unarchive item' };
   }
 }
 

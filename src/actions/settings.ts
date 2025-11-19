@@ -5,7 +5,7 @@ import { getServerSession } from '@/lib/auth/session';
 import { db } from '@/lib/db';
 import { userSettings, deliveryItems } from '@/lib/db/schema';
 import { updateSettingsSchema } from '@/lib/api/schemas';
-import { eq, ne, and, sql } from 'drizzle-orm';
+import { eq, and, sql } from 'drizzle-orm';
 import { computeDeadline } from '@/lib/date-utils';
 import type { ActionResult } from './items';
 
@@ -81,7 +81,7 @@ export async function updateSettingsAction(
           .where(
             and(
               eq(deliveryItems.user_id, userId),
-              ne(deliveryItems.status, 'ARCHIVED')
+              eq(deliveryItems.is_archived, false)
             )
           );
 
