@@ -6,6 +6,7 @@ import {
   timestamp,
   date,
   pgEnum,
+  boolean,
 } from 'drizzle-orm/pg-core';
 
 // Enum for delivery item status
@@ -13,7 +14,6 @@ export const statusEnum = pgEnum('status', [
   'TO_DO',
   'EDITING',
   'DELIVERED',
-  'ARCHIVED',
 ]);
 
 // Users table (for Auth.js)
@@ -61,6 +61,7 @@ export const deliveryItems = pgTable('delivery_items', {
   custom_deadline: timestamp('custom_deadline', { withTimezone: true }),
   notes: text('notes'),
   status: statusEnum('status').notNull().default('TO_DO'),
+  is_archived: boolean('is_archived').notNull().default(false),
   delivered_at: timestamp('delivered_at', { withTimezone: true }),
   created_at: timestamp('created_at', { withTimezone: true })
     .defaultNow()
@@ -88,6 +89,7 @@ export type OptimisticDeliveryItem = DeliveryItem & {
 export type OptimisticAction =
   | { type: 'deliver'; itemId: string }
   | { type: 'archive'; itemId: string }
+  | { type: 'unarchive'; itemId: string }
   | { type: 'delete'; itemId: string }
   | { type: 'add'; item: DeliveryItem }
   | { type: 'update'; itemId: string; updates: Partial<DeliveryItem> };

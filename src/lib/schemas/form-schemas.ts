@@ -28,7 +28,7 @@ export const itemFormSchema = z
       .optional()
       .or(z.literal('')),
 
-    status: z.enum(['TO_DO', 'EDITING', 'DELIVERED', 'ARCHIVED']),
+    status: z.enum(['TO_DO', 'EDITING', 'DELIVERED']),
 
     // UI-only field for toggle state
     use_custom_deadline: z.boolean(),

@@ -63,14 +63,16 @@ export const updateItemSchema = z.object({
     )
     .optional()
     .nullable(),
-  status: z.enum(['TO_DO', 'EDITING', 'DELIVERED', 'ARCHIVED']).optional(),
+  status: z.enum(['TO_DO', 'EDITING', 'DELIVERED']).optional(),
+  is_archived: z.boolean().optional(),
 });
 
 /**
  * Schema for query parameters on GET /api/items
  */
 export const itemsQuerySchema = z.object({
-  status: z.enum(['TO_DO', 'EDITING', 'DELIVERED', 'ARCHIVED']).optional(),
+  status: z.enum(['TO_DO', 'EDITING', 'DELIVERED']).optional(),
+  isArchived: z.coerce.boolean().optional(),
   sort: z
     .enum(['deadline', 'shoot_date', 'created_at'])
     .optional()
