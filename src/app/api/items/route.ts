@@ -10,6 +10,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const queryParams = {
       status: searchParams.get('status') || undefined,
+      isArchived: searchParams.get('isArchived') || undefined,
       sort: searchParams.get('sort') || 'deadline',
       order: searchParams.get('order') || 'asc',
     };
@@ -26,6 +27,13 @@ export async function GET(request: NextRequest) {
       if (validated.status) {
         query = query.where(
           eq(deliveryItems.status, validated.status)
+        ) as typeof query;
+      }
+
+      // Apply isArchived filter if provided
+      if (validated.isArchived !== undefined) {
+        query = query.where(
+          eq(deliveryItems.is_archived, validated.isArchived)
         ) as typeof query;
       }
 

@@ -79,6 +79,9 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
           updateData.delivered_at = new Date();
         }
       }
+      if (validated.is_archived !== undefined) {
+        updateData.is_archived = validated.is_archived;
+      }
 
       // Always update updated_at timestamp
       updateData.updated_at = new Date();

@@ -38,7 +38,8 @@ export async function getUserSettings(
 export async function getItemsForUser(
   userId: string,
   filters?: {
-    status?: 'TO_DO' | 'EDITING' | 'DELIVERED' | 'ARCHIVED';
+    status?: 'TO_DO' | 'EDITING' | 'DELIVERED';
+    isArchived?: boolean;
     sort?: string;
     order?: 'asc' | 'desc';
   },
@@ -51,6 +52,11 @@ export async function getItemsForUser(
   // Add status filter if provided
   if (filters?.status) {
     conditions.push(eq(deliveryItems.status, filters.status));
+  }
+
+  // Add is_archived filter if provided
+  if (filters?.isArchived !== undefined) {
+    conditions.push(eq(deliveryItems.is_archived, filters.isArchived));
   }
 
   // Determine sort field and order
