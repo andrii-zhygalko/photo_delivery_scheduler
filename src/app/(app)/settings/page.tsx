@@ -34,7 +34,7 @@ export default async function SettingsPage() {
       .where(eq(deliveryItems.user_id, userId));
 
     const nonArchivedCount = items.filter(
-      item => item.status !== 'ARCHIVED'
+      item => !item.is_archived
     ).length;
 
     return {

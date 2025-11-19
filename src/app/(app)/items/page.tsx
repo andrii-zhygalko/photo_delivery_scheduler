@@ -5,7 +5,6 @@ import { getUserSettings, getItemsForUser } from '@/lib/db/queries';
 import { ItemsFilter } from '@/components/items-filter';
 import { ItemsPageClient } from '@/components/items-page-client';
 import { sql } from 'drizzle-orm';
-import type { DeliveryItem } from '@/lib/db/schema';
 
 interface ItemsPageProps {
   searchParams: Promise<{
@@ -41,8 +40,7 @@ export default async function ItemsPage(props: ItemsPageProps) {
     const statusFilter =
       searchParams.status === 'TO_DO' ||
       searchParams.status === 'EDITING' ||
-      searchParams.status === 'DELIVERED' ||
-      searchParams.status === 'ARCHIVED'
+      searchParams.status === 'DELIVERED'
         ? searchParams.status
         : undefined;
 
@@ -53,6 +51,7 @@ export default async function ItemsPage(props: ItemsPageProps) {
         userId,
         {
           status: statusFilter,
+          isArchived: false, // Only show non-archived items
           sort: searchParams.sort,
           order: searchParams.order,
         },
@@ -60,15 +59,8 @@ export default async function ItemsPage(props: ItemsPageProps) {
       ),
     ]);
 
-    // Filter out archived items unless explicitly filtering for them
-    const filteredItems = itemsList.filter((item: DeliveryItem) =>
-      statusFilter === 'ARCHIVED'
-        ? item.status === 'ARCHIVED'
-        : item.status !== 'ARCHIVED'
-    );
-
     return {
-      items: filteredItems,
+      items: itemsList, // Already filtered by isArchived: false
       userSettings: settings,
     };
   });

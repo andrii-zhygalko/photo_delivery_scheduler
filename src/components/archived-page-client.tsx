@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import { ItemsList } from '@/components/items-list';
 import { ItemDialog } from '@/components/item-dialog';
 import { ConfirmDialog } from '@/components/confirm-dialog';
-import { deleteItemAction } from '@/actions/items';
+import { unarchiveItemAction, deleteItemAction } from '@/actions/items';
 import type {
   DeliveryItem,
   UserSettings,
@@ -51,9 +51,12 @@ export function ArchivedPageClient({
     switch (action.type) {
       case 'delete':
         return state.filter(item => item.id !== action.itemId);
+      case 'unarchive':
+        // Remove from archived list
+        return state.filter(item => item.id !== action.itemId);
       case 'update':
-        // If status is being changed to non-archived, remove from archived list
-        if (action.updates.status && action.updates.status !== 'ARCHIVED') {
+        // If is_archived is being changed to false, remove from list
+        if ('is_archived' in action.updates && action.updates.is_archived === false) {
           return state.filter(item => item.id !== action.itemId);
         }
         // Otherwise, update the item
@@ -70,6 +73,22 @@ export function ArchivedPageClient({
   const handleEdit = (item: DeliveryItem) => {
     setSelectedItem(item);
     setDialogOpen(true);
+  };
+
+  const handleUnarchive = async (item: DeliveryItem) => {
+    startTransition(async () => {
+      // Optimistic update: remove from archived list
+      addOptimisticUpdate({ type: 'unarchive', itemId: item.id });
+
+      const result = await unarchiveItemAction(item.id);
+      if (!result.success) {
+        toast.error(result.error || 'Failed to unarchive item');
+      } else {
+        toast.success('Item moved to Items page');
+      }
+
+      router.refresh();
+    });
   };
 
   const handleDelete = async (item: DeliveryItem) => {
@@ -120,6 +139,7 @@ export function ArchivedPageClient({
           items={optimisticItems}
           userTimezone={userSettings.timezone}
           onEdit={handleEdit}
+          onUnarchive={handleUnarchive}
           onDelete={handleDelete}
         />
       </div>

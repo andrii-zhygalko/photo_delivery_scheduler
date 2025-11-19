@@ -35,7 +35,7 @@ export default async function ArchivedPage(props: ArchivedPageProps) {
       getItemsForUser(
         userId,
         {
-          status: 'ARCHIVED',
+          isArchived: true, // Only show archived items
           sort: searchParams.sort,
           order: searchParams.order,
         },

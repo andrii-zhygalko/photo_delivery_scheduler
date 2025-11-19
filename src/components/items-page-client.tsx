@@ -10,6 +10,7 @@ import { ConfirmDialog } from '@/components/confirm-dialog';
 import {
   deliverItemAction,
   archiveItemAction,
+  unarchiveItemAction,
   deleteItemAction,
 } from '@/actions/items';
 import type {
@@ -64,6 +65,9 @@ export function ItemsPageClient({ items, userSettings }: ItemsPageClientProps) {
         );
       case 'archive':
         // Remove from list immediately (Items page only shows non-archived)
+        return state.filter(item => item.id !== action.itemId);
+      case 'unarchive':
+        // Remove from list (shouldn't happen on items page since items aren't archived here)
         return state.filter(item => item.id !== action.itemId);
       case 'delete':
         return state.filter(item => item.id !== action.itemId);
@@ -134,6 +138,22 @@ export function ItemsPageClient({ items, userSettings }: ItemsPageClientProps) {
     });
   };
 
+  const handleUnarchive = async (item: DeliveryItem) => {
+    startTransition(async () => {
+      // Optimistic update: remove from list (won't be rendered on items page anyway)
+      addOptimisticUpdate({ type: 'unarchive', itemId: item.id });
+
+      const result = await unarchiveItemAction(item.id);
+      if (!result.success) {
+        toast.error(result.error || 'Failed to unarchive item');
+      } else {
+        toast.success('Item moved to Items page');
+      }
+
+      router.refresh();
+    });
+  };
+
   const handleDelete = async (item: DeliveryItem) => {
     setConfirmDialog({
       open: true,
@@ -188,6 +208,7 @@ export function ItemsPageClient({ items, userSettings }: ItemsPageClientProps) {
           onEdit={handleEdit}
           onDeliver={handleDeliver}
           onArchive={handleArchive}
+          onUnarchive={handleUnarchive}
           onDelete={handleDelete}
         />
       </div>
