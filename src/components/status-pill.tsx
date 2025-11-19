@@ -1,7 +1,7 @@
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 
-type Status = 'TO_DO' | 'EDITING' | 'DELIVERED' | 'ARCHIVED';
+type Status = 'TO_DO' | 'EDITING' | 'DELIVERED';
 
 interface StatusPillProps {
   status: Status;
@@ -15,7 +15,6 @@ interface StatusPillProps {
  * - TO_DO: Blue (new items)
  * - EDITING: Yellow (work in progress)
  * - DELIVERED: Green (completed)
- * - ARCHIVED: Gray (archived/inactive)
  */
 
 // Status configuration with labels and descriptions for accessibility
@@ -37,11 +36,6 @@ const statusConfig: Record<
     label: 'Delivered',
     description: 'Completed',
     colors: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
-  },
-  ARCHIVED: {
-    label: 'Archived',
-    description: 'No longer active',
-    colors: 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300',
   },
 };
 

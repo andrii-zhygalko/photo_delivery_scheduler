@@ -81,12 +81,8 @@ export function ItemDialog({
             });
           }
 
-          // Show appropriate toast based on status change
-          if (item.status === 'ARCHIVED' && data.status !== 'ARCHIVED') {
-            toast.success('Item unarchived and moved to active items');
-          } else {
-            toast.success('Item updated successfully');
-          }
+          // Show success toast
+          toast.success('Item updated successfully');
 
           // Close dialog after optimistic update applied
           onOpenChange(false);

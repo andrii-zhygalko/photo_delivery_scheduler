@@ -12,6 +12,7 @@ interface ItemsListProps {
   onEdit?: (item: DeliveryItem) => void;
   onDeliver?: (item: DeliveryItem) => void;
   onArchive?: (item: DeliveryItem) => void;
+  onUnarchive?: (item: DeliveryItem) => void;
   onDelete?: (item: DeliveryItem) => void;
 }
 
@@ -23,6 +24,7 @@ export function ItemsList({
   onEdit,
   onDeliver,
   onArchive,
+  onUnarchive,
   onDelete,
 }: ItemsListProps) {
   const handleEdit = (item: DeliveryItem) => {
@@ -47,6 +49,14 @@ export function ItemsList({
       onArchive(item);
     } else {
       console.log('Archive item:', item.id);
+    }
+  };
+
+  const handleUnarchive = (item: DeliveryItem) => {
+    if (onUnarchive) {
+      onUnarchive(item);
+    } else {
+      console.log('Unarchive item:', item.id);
     }
   };
 
@@ -96,6 +106,7 @@ export function ItemsList({
               onEdit={handleEdit}
               onDeliver={handleDeliver}
               onArchive={handleArchive}
+              onUnarchive={handleUnarchive}
               onDelete={handleDelete}
               className='h-full'
             />
