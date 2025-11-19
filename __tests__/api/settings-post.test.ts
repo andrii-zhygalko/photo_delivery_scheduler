@@ -128,7 +128,7 @@ describe.skip('POST /api/settings', () => {
           .where(eq(deliveryItems.id, created[1].id));
 
         await tx.update(deliveryItems)
-          .set({ status: 'ARCHIVED' })
+          .set({ is_archived: true })
           .where(eq(deliveryItems.id, created[2].id));
       });
 
@@ -164,7 +164,7 @@ describe.skip('POST /api/settings', () => {
       });
 
       const todoItems = updatedItems.filter(item => item.status === 'TO_DO');
-      const archivedItem = updatedItems.find(item => item.status === 'ARCHIVED');
+      const archivedItem = updatedItems.find(item => item.is_archived === true);
 
       // TO_DO items should have different deadlines
       expect(todoItems.length).toBe(2);

@@ -5,7 +5,7 @@
 
 import { describe, test, expect, beforeAll, afterAll, vi } from 'vitest';
 import { db } from '@/lib/db';
-import { sql, eq, ne, and } from 'drizzle-orm';
+import { sql, eq, and } from 'drizzle-orm';
 import { deliveryItems, userSettings } from '@/lib/db/schema';
 import { createTestUser, cleanupTestUsers } from '../helpers/db';
 import { updateSettingsAction } from '@/actions/settings';
@@ -340,7 +340,7 @@ describe('Server Actions - Settings', () => {
           .where(
             and(
               eq(deliveryItems.user_id, testUser2Id),
-              ne(deliveryItems.status, 'ARCHIVED')
+              eq(deliveryItems.is_archived, false)
             )
           );
       });
