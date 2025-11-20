@@ -56,7 +56,10 @@ export function ArchivedPageClient({
         return state.filter(item => item.id !== action.itemId);
       case 'update':
         // If is_archived is being changed to false, remove from list
-        if ('is_archived' in action.updates && action.updates.is_archived === false) {
+        if (
+          'is_archived' in action.updates &&
+          action.updates.is_archived === false
+        ) {
           return state.filter(item => item.id !== action.itemId);
         }
         // Otherwise, update the item
@@ -76,18 +79,30 @@ export function ArchivedPageClient({
   };
 
   const handleUnarchive = async (item: DeliveryItem) => {
-    startTransition(async () => {
-      // Optimistic update: remove from archived list
-      addOptimisticUpdate({ type: 'unarchive', itemId: item.id });
+    setConfirmDialog({
+      open: true,
+      title: 'Unarchive Item?',
+      description: `Are you sure you want to unarchive "${item.client_name}"? It will be moved back to the Items page.`,
+      confirmText: 'Unarchive',
+      variant: 'default',
+      onConfirm: () => {
+        // Close dialog immediately
+        setConfirmDialog(prev => ({ ...prev, open: false }));
 
-      const result = await unarchiveItemAction(item.id);
-      if (!result.success) {
-        toast.error(result.error || 'Failed to unarchive item');
-      } else {
-        toast.success('Item moved to Items page');
-      }
+        startTransition(async () => {
+          // Apply optimistic update inside transition
+          addOptimisticUpdate({ type: 'unarchive', itemId: item.id });
 
-      router.refresh();
+          const result = await unarchiveItemAction(item.id);
+          if (result.success) {
+            toast.success('Item moved to Items page');
+            router.refresh();
+          } else {
+            toast.error(result.error || 'Failed to unarchive item');
+            router.refresh(); // Rollback by syncing with server state
+          }
+        });
+      },
     });
   };
 
