@@ -26,6 +26,7 @@ export default function ComponentsDemoPage() {
       custom_deadline: null,
       notes: 'Beach ceremony at sunset. Need special editing for golden hour shots.',
       status: 'TO_DO',
+      is_archived: false,
       delivered_at: null,
       created_at: new Date('2025-10-28T12:00:00Z'),
       updated_at: new Date('2025-10-28T12:00:00Z'),
@@ -39,6 +40,7 @@ export default function ComponentsDemoPage() {
       custom_deadline: null,
       notes: '50 employees, standard background.',
       status: 'EDITING',
+      is_archived: false,
       delivered_at: null,
       created_at: new Date('2025-10-28T12:00:00Z'),
       updated_at: new Date('2025-10-28T12:00:00Z'),
@@ -52,6 +54,7 @@ export default function ComponentsDemoPage() {
       custom_deadline: null,
       notes: 'Newborn session with props.',
       status: 'TO_DO',
+      is_archived: false,
       delivered_at: null,
       created_at: new Date('2025-10-28T12:00:00Z'),
       updated_at: new Date('2025-10-28T12:00:00Z'),
@@ -65,6 +68,7 @@ export default function ComponentsDemoPage() {
       custom_deadline: new Date('2025-10-13T23:59:00Z'), // Custom earlier deadline (shows ⚡)
       notes: 'Seasonal collection, high-res images for e-commerce.',
       status: 'DELIVERED',
+      is_archived: false,
       delivered_at: new Date('2025-10-17T14:30:00Z'),
       created_at: new Date('2025-09-15T12:00:00Z'),
       updated_at: new Date('2025-10-17T14:30:00Z'),
@@ -77,7 +81,8 @@ export default function ComponentsDemoPage() {
       computed_deadline: new Date('2025-09-28T23:59:00Z'),
       custom_deadline: null,
       notes: null,
-      status: 'ARCHIVED',
+      status: 'DELIVERED',
+      is_archived: true,
       delivered_at: new Date('2025-09-27T10:00:00Z'),
       created_at: new Date('2025-08-01T12:00:00Z'),
       updated_at: new Date('2025-09-27T10:00:00Z'),
@@ -107,7 +112,6 @@ export default function ComponentsDemoPage() {
             <StatusPill status="TO_DO" />
             <StatusPill status="EDITING" />
             <StatusPill status="DELIVERED" />
-            <StatusPill status="ARCHIVED" />
           </div>
         </section>
 
