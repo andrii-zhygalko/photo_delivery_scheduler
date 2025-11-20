@@ -50,7 +50,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${poetsenOne.variable} antialiased`}>
         <PWARegister />
         {children}
-        <Toaster />
+        <Toaster position="top-center" />
       </body>
     </html>
   );
