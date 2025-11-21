@@ -1,19 +1,21 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ItemCard } from '@/components/item-card';
 import { EmptyState } from '@/components/empty-state';
 import { SkeletonGrid } from '@/components/skeleton-grid';
-import type { DeliveryItem } from '@/lib/db/schema';
+import type { OptimisticDeliveryItem } from '@/lib/db/schema';
 
 interface ItemsListProps {
-  items: DeliveryItem[];
+  items: OptimisticDeliveryItem[];
   userTimezone: string;
   isLoading?: boolean; // Show skeleton grid when loading
-  onEdit?: (item: DeliveryItem) => void;
-  onDeliver?: (item: DeliveryItem) => void;
-  onArchive?: (item: DeliveryItem) => void;
-  onUnarchive?: (item: DeliveryItem) => void;
-  onDelete?: (item: DeliveryItem) => void;
+  onEdit?: (item: OptimisticDeliveryItem) => void;
+  onDeliver?: (item: OptimisticDeliveryItem) => void;
+  onArchive?: (item: OptimisticDeliveryItem) => void;
+  onUnarchive?: (item: OptimisticDeliveryItem) => void;
+  onDelete?: (item: OptimisticDeliveryItem) => void;
 }
 
 export function ItemsList({
@@ -27,7 +29,22 @@ export function ItemsList({
   onUnarchive,
   onDelete,
 }: ItemsListProps) {
-  const handleEdit = (item: DeliveryItem) => {
+  // Detect user's motion preference
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setPrefersReducedMotion(mediaQuery.matches);
+
+    const handleChange = (e: MediaQueryListEvent) => {
+      setPrefersReducedMotion(e.matches);
+    };
+
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, []);
+
+  const handleEdit = (item: OptimisticDeliveryItem) => {
     if (onEdit) {
       onEdit(item);
     } else {
@@ -36,7 +53,7 @@ export function ItemsList({
     }
   };
 
-  const handleDeliver = (item: DeliveryItem) => {
+  const handleDeliver = (item: OptimisticDeliveryItem) => {
     if (onDeliver) {
       onDeliver(item);
     } else {
@@ -44,7 +61,7 @@ export function ItemsList({
     }
   };
 
-  const handleArchive = (item: DeliveryItem) => {
+  const handleArchive = (item: OptimisticDeliveryItem) => {
     if (onArchive) {
       onArchive(item);
     } else {
@@ -52,7 +69,7 @@ export function ItemsList({
     }
   };
 
-  const handleUnarchive = (item: DeliveryItem) => {
+  const handleUnarchive = (item: OptimisticDeliveryItem) => {
     if (onUnarchive) {
       onUnarchive(item);
     } else {
@@ -60,7 +77,7 @@ export function ItemsList({
     }
   };
 
-  const handleDelete = (item: DeliveryItem) => {
+  const handleDelete = (item: OptimisticDeliveryItem) => {
     if (onDelete) {
       onDelete(item);
     } else {
@@ -82,6 +99,29 @@ export function ItemsList({
     );
   }
 
+  // Filter out items marked for removal
+  // AnimatePresence will automatically keep them visible during exit animation
+  const visibleItems = items.filter(item => !item._removing);
+
+  // Animation variants for staggered appearance
+  const containerVariants = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: prefersReducedMotion ? 0 : 0.05, // 50ms stagger between items
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: -20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.2 },
+    },
+  };
+
   return (
     <>
       {/* Live region for item count announcements */}
@@ -90,29 +130,57 @@ export function ItemsList({
         aria-live='polite'
         aria-atomic='true'
         className='sr-only'>
-        {items.length} {items.length === 1 ? 'item' : 'items'} found
+        {visibleItems.length} {visibleItems.length === 1 ? 'item' : 'items'}{' '}
+        found
       </div>
 
-      {/* Semantic list structure */}
-      <ul
+      {/* Semantic list structure with AnimatePresence for exit animations */}
+      <motion.ul
         role='list'
         aria-label='Delivery items'
-        className='grid gap-4 sm:grid-cols-2 lg:grid-cols-3 grid-auto-rows-[1fr]'>
-        {items.map(item => (
-          <li key={item.id} role='listitem' className='h-full'>
-            <ItemCard
-              item={item}
-              userTimezone={userTimezone}
-              onEdit={handleEdit}
-              onDeliver={handleDeliver}
-              onArchive={handleArchive}
-              onUnarchive={handleUnarchive}
-              onDelete={handleDelete}
+        className='grid gap-4 sm:grid-cols-2 lg:grid-cols-3 grid-auto-rows-[1fr]'
+        initial='hidden'
+        animate='visible'
+        variants={containerVariants}>
+        <AnimatePresence>
+          {visibleItems.map(item => (
+            <motion.li
+              key={item.id}
+              role='listitem'
               className='h-full'
-            />
-          </li>
-        ))}
-      </ul>
+              layout={!prefersReducedMotion}
+              variants={prefersReducedMotion ? undefined : itemVariants}
+              exit={
+                prefersReducedMotion
+                  ? undefined
+                  : {
+                      opacity: 0,
+                      scale: 0.95,
+                      height: 0,
+                      marginBottom: 0,
+                      overflow: 'hidden',
+                    }
+              }
+              transition={{
+                duration: 0.2,
+                layout: {
+                  duration: 0.2,
+                },
+              }}>
+              <ItemCard
+                item={item}
+                userTimezone={userTimezone}
+                onEdit={handleEdit}
+                onDeliver={handleDeliver}
+                onArchive={handleArchive}
+                onUnarchive={handleUnarchive}
+                onDelete={handleDelete}
+                className='h-full'
+              />
+            </motion.li>
+          ))}
+        </AnimatePresence>
+      </motion.ul>
     </>
   );
 }
