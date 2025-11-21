@@ -94,7 +94,7 @@ export function ArchivedPageClient({
   const handleUnarchive = async (item: DeliveryItem) => {
     setConfirmDialog({
       open: true,
-      title: 'Unarchive Item?',
+      title: 'Unarchive Shoot?',
       description: `Are you sure you want to unarchive "${item.client_name}"? It will be moved back to the Items page.`,
       confirmText: 'Unarchive',
       variant: 'default',

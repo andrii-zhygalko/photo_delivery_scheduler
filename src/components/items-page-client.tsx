@@ -125,7 +125,7 @@ export function ItemsPageClient({ items, userSettings }: ItemsPageClientProps) {
   const handleArchive = async (item: DeliveryItem) => {
     setConfirmDialog({
       open: true,
-      title: 'Archive Item?',
+      title: 'Archive Shoot?',
       description: `Are you sure you want to archive "${item.client_name}"? You can find it in the Archived tab.`,
       confirmText: 'Archive',
       variant: 'default',
@@ -153,7 +153,7 @@ export function ItemsPageClient({ items, userSettings }: ItemsPageClientProps) {
   const handleDelete = async (item: DeliveryItem) => {
     setConfirmDialog({
       open: true,
-      title: 'Delete Item?',
+      title: 'Delete Shoot?',
       description: `This will permanently delete "${item.client_name}". This action cannot be undone.`,
       confirmText: 'Delete',
       variant: 'destructive',
@@ -192,7 +192,11 @@ export function ItemsPageClient({ items, userSettings }: ItemsPageClientProps) {
                 : 'shoots to be delivered'}
             </p>
           </div>
-          <Button onClick={handleNewItem} className='animate-fade-in-up stagger-2'>+ New Shoot</Button>
+          <Button
+            onClick={handleNewItem}
+            className='animate-fade-in-up stagger-2'>
+            + New Shoot
+          </Button>
         </div>
       </div>
 
