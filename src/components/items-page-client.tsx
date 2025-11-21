@@ -10,7 +10,6 @@ import { ConfirmDialog } from '@/components/confirm-dialog';
 import {
   deliverItemAction,
   archiveItemAction,
-  unarchiveItemAction,
   deleteItemAction,
 } from '@/actions/items';
 import type {
@@ -115,11 +114,11 @@ export function ItemsPageClient({ items, userSettings }: ItemsPageClientProps) {
       const result = await deliverItemAction(item.id);
       if (result.success) {
         toast.success('Item marked as delivered!');
-        router.refresh();
       } else {
         toast.error(result.error || 'Failed to mark item as delivered');
-        router.refresh(); // Rollback by syncing with server state
       }
+
+      router.refresh(); // Always refresh to sync with server state
     });
   };
 
@@ -141,29 +140,13 @@ export function ItemsPageClient({ items, userSettings }: ItemsPageClientProps) {
           const result = await archiveItemAction(item.id);
           if (result.success) {
             toast.success('Item archived');
-            router.refresh();
           } else {
             toast.error(result.error || 'Failed to archive item');
-            router.refresh(); // Rollback by syncing with server state
           }
+
+          router.refresh(); // Always refresh to sync with server state
         });
       },
-    });
-  };
-
-  const handleUnarchive = async (item: DeliveryItem) => {
-    startTransition(async () => {
-      // Optimistic update: remove from list (won't be rendered on items page anyway)
-      addOptimisticUpdate({ type: 'unarchive', itemId: item.id });
-
-      const result = await unarchiveItemAction(item.id);
-      if (!result.success) {
-        toast.error(result.error || 'Failed to unarchive item');
-      } else {
-        toast.success('Item moved to Items page');
-      }
-
-      router.refresh();
     });
   };
 
@@ -185,11 +168,11 @@ export function ItemsPageClient({ items, userSettings }: ItemsPageClientProps) {
           const result = await deleteItemAction(item.id);
           if (result.success) {
             toast.success('Item deleted');
-            router.refresh();
           } else {
             toast.error(result.error || 'Failed to delete item');
-            router.refresh(); // Rollback by syncing with server state
           }
+
+          router.refresh(); // Always refresh to sync with server state
         });
       },
     });
@@ -220,7 +203,6 @@ export function ItemsPageClient({ items, userSettings }: ItemsPageClientProps) {
         onEdit={handleEdit}
         onDeliver={handleDeliver}
         onArchive={handleArchive}
-        onUnarchive={handleUnarchive}
         onDelete={handleDelete}
       />
 
