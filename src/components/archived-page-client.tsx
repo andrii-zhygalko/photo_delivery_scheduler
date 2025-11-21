@@ -109,11 +109,11 @@ export function ArchivedPageClient({
           const result = await unarchiveItemAction(item.id);
           if (result.success) {
             toast.success('Item moved to Items page');
-            router.refresh();
           } else {
             toast.error(result.error || 'Failed to unarchive item');
-            router.refresh(); // Rollback by syncing with server state
           }
+
+          router.refresh(); // Always refresh to sync with server state
         });
       },
     });
@@ -137,11 +137,11 @@ export function ArchivedPageClient({
           const result = await deleteItemAction(item.id);
           if (result.success) {
             toast.success('Shoot deleted');
-            router.refresh();
           } else {
             toast.error(result.error || 'Failed to delete shoot');
-            router.refresh(); // Rollback by syncing with server state
           }
+
+          router.refresh(); // Always refresh to sync with server state
         });
       },
     });
