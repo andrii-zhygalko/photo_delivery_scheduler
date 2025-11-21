@@ -84,6 +84,7 @@ export type NewDeliveryItem = typeof deliveryItems.$inferInsert;
 // Optimistic update types
 export type OptimisticDeliveryItem = DeliveryItem & {
   _optimistic?: boolean; // Flag for visual feedback during pending operations
+  _removing?: boolean; // Flag for exit animation before removal
 };
 
 export type OptimisticAction =
