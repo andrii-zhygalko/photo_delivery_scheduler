@@ -46,6 +46,7 @@ export function BottomNav() {
             <Link
               key={item.href}
               href={item.href}
+              scroll={false}
               className={cn(
                 'flex flex-col items-center gap-1 px-3 py-2 rounded-lg transition-all duration-200 min-w-0 flex-1 min-h-[44px] justify-center',
                 'hover:bg-accent hover:text-accent-foreground hover:scale-105 active:scale-95 touch-manipulation',

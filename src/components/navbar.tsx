@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
+import { useEffect, useRef } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -24,6 +25,27 @@ interface NavbarProps {
 
 export function Navbar({ user }: NavbarProps) {
   const pathname = usePathname();
+  // Ref to track if navigation was triggered by browser back/forward button
+  const isBack = useRef(false);
+
+  // Listen for browser back/forward button events
+  useEffect(() => {
+    const onPopState = () => {
+      isBack.current = true;
+    };
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
+  }, []);
+
+  // Manually handle scroll restoration on pathname changes
+  useEffect(() => {
+    // Only scroll to top if this is a forward navigation (not back button)
+    if (!isBack.current) {
+      window.scrollTo(0, 0);
+    }
+    // Reset flag for next navigation
+    isBack.current = false;
+  }, [pathname]);
 
   const links = [
     { href: '/items', label: 'Shoots' },
@@ -60,6 +82,7 @@ export function Navbar({ user }: NavbarProps) {
           <div className='flex items-center gap-1'>
             <Link
               href='/items'
+              scroll={false}
               className='transition-transform hover:scale-105'
               aria-label='Go to home'>
               <Image
@@ -73,6 +96,7 @@ export function Navbar({ user }: NavbarProps) {
             <h1 className='text-2xl font-bold tracking-tight text-foreground/85 font-[family-name:var(--font-poetsen)]'>
               <Link
                 href='/items'
+                scroll={false}
                 className='hover:text-primary transition-colors'>
                 Photo Delivery
               </Link>
@@ -85,6 +109,7 @@ export function Navbar({ user }: NavbarProps) {
               <Link
                 key={link.href}
                 href={link.href}
+                scroll={false}
                 className={cn(
                   'text-sm font-medium transition-colors hover:text-primary',
                   isActive(link.href)
