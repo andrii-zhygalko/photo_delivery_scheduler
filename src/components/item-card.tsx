@@ -69,7 +69,7 @@ export function ItemCard({
     <div
       className={cn(
         'bg-gradient-card-border rounded-lg p-[2px]',
-        'hover:shadow-xl hover:shadow-purple-500/20 transition-all duration-200',
+        'hover:shadow-xl hover:shadow-purple-500/20 transition-shadow duration-200',
         isOptimistic && 'opacity-70', // Reduced opacity during pending state
         className
       )}>
