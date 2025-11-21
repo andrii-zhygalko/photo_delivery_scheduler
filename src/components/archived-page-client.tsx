@@ -50,17 +50,30 @@ export function ArchivedPageClient({
   >(items, (state, action) => {
     switch (action.type) {
       case 'delete':
-        return state.filter(item => item.id !== action.itemId);
+        // Mark for removal to trigger exit animation
+        return state.map(item =>
+          item.id === action.itemId
+            ? { ...item, _removing: true, _optimistic: true }
+            : item
+        );
       case 'unarchive':
-        // Remove from archived list
-        return state.filter(item => item.id !== action.itemId);
+        // Mark for removal to trigger exit animation
+        return state.map(item =>
+          item.id === action.itemId
+            ? { ...item, _removing: true, _optimistic: true }
+            : item
+        );
       case 'update':
-        // If is_archived is being changed to false, remove from list
+        // If is_archived is being changed to false, mark for removal
         if (
           'is_archived' in action.updates &&
           action.updates.is_archived === false
         ) {
-          return state.filter(item => item.id !== action.itemId);
+          return state.map(item =>
+            item.id === action.itemId
+              ? { ...item, _removing: true, _optimistic: true }
+              : item
+          );
         }
         // Otherwise, update the item
         return state.map(item =>
@@ -148,16 +161,14 @@ export function ArchivedPageClient({
         </div>
       </div>
 
-      {/* Items List with staggered animation wrapper */}
-      <div className='animate-fade-in-up stagger-2'>
-        <ItemsList
-          items={optimisticItems}
-          userTimezone={userSettings.timezone}
-          onEdit={handleEdit}
-          onUnarchive={handleUnarchive}
-          onDelete={handleDelete}
-        />
-      </div>
+      {/* Items List - now handles its own animations via Framer Motion */}
+      <ItemsList
+        items={optimisticItems}
+        userTimezone={userSettings.timezone}
+        onEdit={handleEdit}
+        onUnarchive={handleUnarchive}
+        onDelete={handleDelete}
+      />
 
       <ItemDialog
         open={dialogOpen}

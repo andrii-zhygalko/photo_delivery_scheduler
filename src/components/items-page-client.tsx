@@ -64,13 +64,26 @@ export function ItemsPageClient({ items, userSettings }: ItemsPageClientProps) {
             : item
         );
       case 'archive':
-        // Remove from list immediately (Items page only shows non-archived)
-        return state.filter(item => item.id !== action.itemId);
+        // Mark for removal to trigger exit animation
+        return state.map(item =>
+          item.id === action.itemId
+            ? { ...item, _removing: true, _optimistic: true }
+            : item
+        );
       case 'unarchive':
-        // Remove from list (shouldn't happen on items page since items aren't archived here)
-        return state.filter(item => item.id !== action.itemId);
+        // Mark for removal to trigger exit animation
+        return state.map(item =>
+          item.id === action.itemId
+            ? { ...item, _removing: true, _optimistic: true }
+            : item
+        );
       case 'delete':
-        return state.filter(item => item.id !== action.itemId);
+        // Mark for removal to trigger exit animation
+        return state.map(item =>
+          item.id === action.itemId
+            ? { ...item, _removing: true, _optimistic: true }
+            : item
+        );
       case 'add':
         return [...state, { ...action.item, _optimistic: true }];
       case 'update':
@@ -200,18 +213,16 @@ export function ItemsPageClient({ items, userSettings }: ItemsPageClientProps) {
         </div>
       </div>
 
-      {/* Items List with staggered animation wrapper */}
-      <div className='animate-fade-in-up stagger-3'>
-        <ItemsList
-          items={optimisticItems}
-          userTimezone={userSettings.timezone}
-          onEdit={handleEdit}
-          onDeliver={handleDeliver}
-          onArchive={handleArchive}
-          onUnarchive={handleUnarchive}
-          onDelete={handleDelete}
-        />
-      </div>
+      {/* Items List - now handles its own animations via Framer Motion */}
+      <ItemsList
+        items={optimisticItems}
+        userTimezone={userSettings.timezone}
+        onEdit={handleEdit}
+        onDeliver={handleDeliver}
+        onArchive={handleArchive}
+        onUnarchive={handleUnarchive}
+        onDelete={handleDelete}
+      />
 
       <ItemDialog
         open={dialogOpen}
