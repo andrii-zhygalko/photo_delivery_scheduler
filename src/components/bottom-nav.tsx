@@ -13,7 +13,7 @@ const navItems = [
     description: 'View and manage photo shoots',
   },
   {
-    title: 'Archived',
+    title: 'Archive',
     href: '/archived',
     icon: Archive,
     description: 'View archived deliveries',
@@ -31,14 +31,12 @@ export function BottomNav() {
 
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-t"
-      aria-label="Bottom navigation"
-    >
+      className='fixed bottom-0 left-0 right-0 z-50 md:hidden bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-t'
+      aria-label='Bottom navigation'>
       <div
-        className="flex items-center justify-around py-2 px-1"
-        style={{ paddingBottom: 'calc(0.5rem + env(safe-area-inset-bottom))' }}
-      >
-        {navItems.map((item) => {
+        className='flex items-center justify-around py-2 px-1'
+        style={{ paddingBottom: 'calc(0.5rem + env(safe-area-inset-bottom))' }}>
+        {navItems.map(item => {
           const isActive = pathname === item.href;
           const Icon = item.icon;
 
@@ -55,10 +53,9 @@ export function BottomNav() {
                   : 'text-muted-foreground hover:text-foreground'
               )}
               aria-label={`Navigate to ${item.title}: ${item.description}`}
-              aria-current={isActive ? 'page' : undefined}
-            >
-              <Icon className="h-5 w-5 shrink-0" />
-              <span className="text-xs font-medium truncate leading-tight">
+              aria-current={isActive ? 'page' : undefined}>
+              <Icon className='h-5 w-5 shrink-0' />
+              <span className='text-xs font-medium truncate leading-tight'>
                 {item.title}
               </span>
             </Link>

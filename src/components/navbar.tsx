@@ -49,7 +49,7 @@ export function Navbar({ user }: NavbarProps) {
 
   const links = [
     { href: '/items', label: 'Shoots' },
-    { href: '/archived', label: 'Archived' },
+    { href: '/archived', label: 'Archive' },
     { href: '/settings', label: 'Settings' },
   ];
 
