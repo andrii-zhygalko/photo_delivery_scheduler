@@ -39,13 +39,39 @@ export const viewport = {
   userScalable: true,
 };
 
+/**
+ * Blocking script for view density preference
+ *
+ * This script runs BEFORE React hydrates to:
+ * 1. Read the user's saved view density preference from localStorage
+ * 2. Add the 'view-compact' class to <html> if preference is 'compact'
+ *
+ * WHY THIS APPROACH:
+ * - Script executes synchronously before first paint (<1ms)
+ * - CSS applies immediately based on the class
+ * - No hydration mismatch (server and client see same CSS class)
+ * - No Flash of Unstyled Content (FOUC)
+ *
+ * This is an industry-standard pattern used by:
+ * - next-themes (dark mode)
+ * - Tailwind CSS dark mode
+ * - Many production apps
+ */
+const viewDensityScript = `(function(){try{if(localStorage.getItem('pds:view-density')==='compact'){document.documentElement.classList.add('view-compact')}}catch(e){}})();`;
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='en'>
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* View density preference script - must run before React hydrates */}
+        <script
+          dangerouslySetInnerHTML={{ __html: viewDensityScript }}
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${poetsenOne.variable} antialiased`}>
         <PWARegister />
