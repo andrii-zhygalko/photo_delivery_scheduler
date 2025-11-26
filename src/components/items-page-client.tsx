@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { ItemsList } from '@/components/items-list';
 import { ItemDialog } from '@/components/item-dialog';
 import { ConfirmDialog } from '@/components/confirm-dialog';
+import { ViewToggle } from '@/components/view-toggle';
 import {
   deliverItemAction,
   archiveItemAction,
@@ -181,26 +182,26 @@ export function ItemsPageClient({ items, userSettings }: ItemsPageClientProps) {
   return (
     <>
       {/* Page Header with animation */}
-      <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 animate-fade-in-up stagger-1'>
-        <div className='flex justify-between items-center w-full'>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 animate-fade-in-up stagger-1">
+        <div className="flex justify-between items-center w-full">
+          {/* Title Section */}
           <div>
-            <h1 className='text-2xl font-bold mb-0'>My Shoots List</h1>
-            <p className='text-sm text-muted-foreground'>
+            <h1 className="text-2xl font-bold mb-0">Shoots List</h1>
+            <p className="text-sm text-muted-foreground">
               {items.length}{' '}
-              {items.length === 1
-                ? 'shoot to be delivered'
-                : 'shoots to be delivered'}
+              {items.length === 1 ? 'shoot to ship' : 'shoots to ship'}
             </p>
           </div>
-          <Button
-            onClick={handleNewItem}
-            className='animate-fade-in-up stagger-2'>
-            + New Shoot
-          </Button>
+
+          {/* Actions Section - Toggle and Button */}
+          <div className="flex items-center gap-3 animate-fade-in-up stagger-2">
+            <ViewToggle />
+            <Button onClick={handleNewItem}>+ New Shoot</Button>
+          </div>
         </div>
       </div>
 
-      {/* Items List - now handles its own animations via Framer Motion */}
+      {/* Items List */}
       <ItemsList
         items={optimisticItems}
         userTimezone={userSettings.timezone}

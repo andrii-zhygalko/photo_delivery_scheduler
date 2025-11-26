@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import { ItemsList } from '@/components/items-list';
 import { ItemDialog } from '@/components/item-dialog';
 import { ConfirmDialog } from '@/components/confirm-dialog';
+import { ViewToggle } from '@/components/view-toggle';
 import { unarchiveItemAction, deleteItemAction } from '@/actions/items';
 import type {
   DeliveryItem,
@@ -150,18 +151,24 @@ export function ArchivedPageClient({
   return (
     <>
       {/* Page Header with animation */}
-      <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 animate-fade-in-up stagger-1'>
-        <div className='flex justify-between items-center w-full'>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 animate-fade-in-up stagger-1">
+        <div className="flex justify-between items-center w-full">
+          {/* Title Section */}
           <div>
-            <h1 className='text-2xl font-bold mb-0'>Archived Shoots</h1>
-            <p className='text-sm text-muted-foreground'>
+            <h1 className="text-2xl font-bold mb-0">Archived Shoots</h1>
+            <p className="text-sm text-muted-foreground">
               {items.length} archived {items.length === 1 ? 'shoot' : 'shoots'}
             </p>
+          </div>
+
+          {/* View Density Toggle */}
+          <div className="animate-fade-in-up stagger-2">
+            <ViewToggle />
           </div>
         </div>
       </div>
 
-      {/* Items List - now handles its own animations via Framer Motion */}
+      {/* Items List */}
       <ItemsList
         items={optimisticItems}
         userTimezone={userSettings.timezone}
