@@ -339,3 +339,216 @@
     }
   }
 }
+
+/* =====================================================================
+   VIEW DENSITY UTILITIES - v3
+
+   KEY CHANGES FROM v2:
+   1. Added CSS transitions for smooth density change animations
+   2. Transitions use transform/opacity where possible (GPU-accelerated)
+   3. Height transitions use max-height trick for smooth collapse
+   4. Respects prefers-reduced-motion
+   ===================================================================== */
+
+@layer components {
+  /* ===== VIEW DENSITY: FULL (Default) ===== */
+
+  /* Card outer wrapper (gradient border) */
+  .view-density-wrapper {
+    @apply p-0.5;
+  }
+
+  /* Card header section */
+  .view-density-header {
+    @apply space-y-2 pb-3;
+    /* Smooth transition for padding changes */
+    transition: padding 200ms ease-out;
+  }
+
+  /* Client name title */
+  .view-density-title {
+    @apply text-lg;
+    /* Smooth transition for font size */
+    transition: font-size 200ms ease-out;
+  }
+
+  /* Dates section (shoot date, deadline) */
+  .view-density-dates {
+    @apply space-y-2;
+    /* Gap transitions aren't well supported, so we use a wrapper approach */
+    transition: gap 200ms ease-out;
+  }
+
+  /* Date text items */
+  .view-density-dates > div {
+    transition: transform 200ms ease-out, opacity 200ms ease-out;
+  }
+
+  /* Card content section (notes) */
+  .view-density-content {
+    @apply pb-3;
+    transition: padding 200ms ease-out;
+  }
+
+  /* Notes text */
+  .view-density-notes {
+    @apply line-clamp-2 text-sm;
+    transition: font-size 200ms ease-out;
+  }
+
+  /* Card footer (action buttons) - uses max-height for smooth collapse */
+  .view-density-footer {
+    @apply pt-3 flex;
+    max-height: 100px; /* Large enough for content */
+    overflow: hidden;
+    transition: max-height 250ms ease-out, opacity 200ms ease-out,
+      padding 200ms ease-out;
+  }
+
+  /* ===== VIEW DENSITY: COMPACT ===== */
+  /* These override the above when .view-compact is on <html> */
+
+  .view-compact .view-density-wrapper {
+    @apply p-px;
+  }
+
+  .view-compact .view-density-header {
+    @apply space-y-1 pb-2;
+  }
+
+  .view-compact .view-density-title {
+    @apply text-base;
+  }
+
+  .view-compact .view-density-dates {
+    @apply space-y-0.5;
+  }
+
+  /* Scale down date items slightly in compact mode */
+  .view-compact .view-density-dates > div {
+    @apply text-xs;
+  }
+
+  .view-compact .view-density-content {
+    @apply pb-1.5;
+  }
+
+  .view-compact .view-density-notes {
+    @apply line-clamp-1 text-xs;
+  }
+
+  /* Collapse footer in compact mode */
+  .view-compact .view-density-footer {
+    @apply pt-0;
+    max-height: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* Show footer on card hover/focus in compact mode */
+  .view-compact .group:hover .view-density-footer,
+  .view-compact .group:focus-within .view-density-footer {
+    max-height: 100px;
+    opacity: 1;
+    pointer-events: auto;
+    @apply pt-2;
+  }
+
+  /* ===== REDUCED MOTION ===== */
+  /* Respect user's motion preferences */
+  @media (prefers-reduced-motion: reduce) {
+    .view-density-header,
+    .view-density-title,
+    .view-density-dates,
+    .view-density-dates > div,
+    .view-density-content,
+    .view-density-notes,
+    .view-density-footer {
+      transition: none;
+    }
+  }
+}
+
+/* =====================================================================
+   CARDS CONTAINER ENTRANCE ANIMATION
+
+   Simple fade-in on the container (not individual cards).
+   This is safe because Framer Motion doesn't control the container's opacity.
+   ===================================================================== */
+@keyframes cards-container-enter {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-cards-container-enter {
+  animation: cards-container-enter 0.3s ease-out forwards;
+  opacity: 0;
+}
+
+/* Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .animate-cards-container-enter {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+/* =====================================================================
+   VIEW TOGGLE BUTTON STYLING - v6
+
+   CSS-only toggle styling (no React state for appearance).
+   The blocking script sets .view-compact on <html> before paint.
+   These CSS rules immediately show the correct toggle state.
+   ===================================================================== */
+
+/* Default state (Full view): Full button is active */
+.view-toggle-full {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  border: 1px solid hsl(var(--border));
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.2), 0 1px 2px 0 rgb(0 0 0 / 0.06);
+  font-weight: 600;
+}
+
+.view-toggle-compact {
+  background-color: transparent;
+  color: hsl(var(--muted-foreground));
+  border: 1px solid transparent;
+  font-weight: 500;
+}
+
+.view-toggle-compact:hover {
+  color: hsl(var(--foreground));
+  background-color: hsl(var(--muted) / 0.5);
+}
+
+/* Compact mode (.view-compact on <html>): Compact button is active */
+.view-compact .view-toggle-full {
+  background-color: transparent;
+  color: hsl(var(--muted-foreground));
+  /* border: 1px solid transparent; */
+  box-shadow: none;
+  font-weight: 500;
+}
+
+.view-compact .view-toggle-full:hover {
+  color: hsl(var(--foreground));
+  background-color: hsl(var(--muted) / 0.5);
+}
+
+.view-compact .view-toggle-compact {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  /* border: 1px solid hsl(var(--border)); */
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.2), 0 1px 2px 0 rgb(0 0 0 / 0.06);
+  font-weight: 600;
+}
+
+.view-compact .view-toggle-compact:hover {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
