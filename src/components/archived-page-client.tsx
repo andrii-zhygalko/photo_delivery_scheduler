@@ -155,7 +155,7 @@ export function ArchivedPageClient({
         <div className="flex justify-between items-center w-full">
           {/* Title Section */}
           <div>
-            <h1 className="text-2xl font-bold mb-0">Archived Shoots</h1>
+            <h1 className="text-2xl font-bold mb-0">Archived</h1>
             <p className="text-sm text-muted-foreground">
               {items.length} archived {items.length === 1 ? 'shoot' : 'shoots'}
             </p>

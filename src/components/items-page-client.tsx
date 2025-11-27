@@ -186,7 +186,7 @@ export function ItemsPageClient({ items, userSettings }: ItemsPageClientProps) {
         <div className="flex justify-between items-center w-full">
           {/* Title Section */}
           <div>
-            <h1 className="text-2xl font-bold mb-0">Shoots List</h1>
+            <h1 className="text-2xl font-bold mb-0">Shoots</h1>
             <p className="text-sm text-muted-foreground">
               {items.length}{' '}
               {items.length === 1 ? 'shoot to ship' : 'shoots to ship'}
