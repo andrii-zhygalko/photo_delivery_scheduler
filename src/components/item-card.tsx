@@ -9,7 +9,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { StatusPill } from '@/components/status-pill';
 import { DeadlineBadge } from '@/components/deadline-badge';
-import { formatDeadline } from '@/lib/date-utils';
+import { formatDeadline, formatDeadlineFull } from '@/lib/date-utils';
 import type { OptimisticDeliveryItem } from '@/lib/db/schema';
 import {
   Camera,
@@ -60,8 +60,10 @@ export function ItemCard({
   className,
 }: ItemCardProps) {
   const formattedShootDate = formatDeadline(item.shoot_date, userTimezone);
-  const formattedDeadline = formatDeadline(
-    item.custom_deadline || item.computed_deadline,
+  const effectiveDeadline = item.custom_deadline || item.computed_deadline;
+  const formattedDeadline = formatDeadline(effectiveDeadline, userTimezone);
+  const formattedDeadlineFull = formatDeadlineFull(
+    effectiveDeadline,
     userTimezone
   );
 
@@ -73,6 +75,7 @@ export function ItemCard({
 
   return (
     <div
+      data-status={item.status}
       className={cn(
         // Base styles
         'bg-gradient-card-border rounded-lg',
@@ -85,37 +88,37 @@ export function ItemCard({
         // Optimistic update feedback
         isOptimistic && 'opacity-70',
         className
-      )}
-    >
+      )}>
       <Card
         className={cn(
           'bg-gradient-card border-0 h-full flex flex-col',
           isOptimistic && 'pointer-events-none' // Prevent interactions during pending state
         )}
-        role="article"
+        role='article'
         aria-labelledby={titleId}
-        aria-busy={isOptimistic}
-      >
+        aria-busy={isOptimistic}>
         {/* Header: Client name + Status + Dates */}
-        <CardHeader className="view-density-header">
+        <CardHeader className='view-density-header'>
           {/* Client Name */}
-          <div className="flex items-start justify-between gap-2">
+          <div className='mt-2 flex items-start justify-between gap-2'>
             <h3
               id={titleId}
-              className="view-density-title font-semibold text-slate-900 dark:text-slate-100 truncate flex-1"
-            >
+              className='view-density-title font-semibold text-slate-900 dark:text-slate-100 truncate flex-1'>
               {item.client_name}
             </h3>
-            <StatusPill status={item.status} />
+            {/* Status Pill - hidden in list view */}
+            <div className='view-density-status'>
+              <StatusPill status={item.status} />
+            </div>
           </div>
 
           {/* Dates Section */}
-          <div className="view-density-dates">
-            {/* Shoot Date */}
-            <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
-              <Camera className="h-4 w-4 shrink-0" aria-hidden="true" />
+          <div className='view-density-dates'>
+            {/* Shoot Date - hidden in list view */}
+            <div className='view-density-shoot-date flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400'>
+              <Camera className='h-4 w-4 shrink-0' aria-hidden='true' />
               <span>
-                <span className="text-sm text-slate-600 dark:text-slate-400">
+                <span className='text-sm text-slate-600 dark:text-slate-400'>
                   Shoot date:
                 </span>
                 <time dateTime={item.shoot_date}> {formattedShootDate}</time>
@@ -123,30 +126,63 @@ export function ItemCard({
             </div>
 
             {/* Deadline */}
-            <div className="flex items-center justify-between gap-2">
-              <div className="flex gap-2 items-center">
-                <CalendarIcon
-                  className="h-4 w-4 shrink-0"
-                  aria-hidden="true"
-                />
-                <span className="text-sm text-slate-600 dark:text-slate-400">
-                  Deadline: {formattedDeadline}
-                </span>
-              </div>
-              {/* Only show deadline countdown for active items (not delivered/archived) */}
+            <div className='view-density-deadline flex items-center gap-1.5 text-sm'>
+              <CalendarIcon
+                className='h-4 w-4 text-slate-600 dark:text-slate-400'
+                aria-hidden='true'
+              />
+
+              {/* Standard label - hidden in list view */}
+              <span className='view-density-deadline-label text-slate-600 dark:text-slate-400'>
+                Deadline:
+              </span>
+
+              {/* List view label - hidden by default, shown in list view */}
+              <span className='view-density-deadline-ship-label text-slate-600 dark:text-slate-400'>
+                Ship till:
+              </span>
+
+              {/* Standard date format - hidden in list view */}
+              <time
+                className='view-density-deadline-date-standard text-slate-600 dark:text-slate-400'
+                dateTime={
+                  effectiveDeadline instanceof Date
+                    ? effectiveDeadline.toISOString()
+                    : effectiveDeadline
+                }>
+                {formattedDeadline}
+              </time>
+
+              {/* Full date format - hidden by default, shown in list view */}
+              <time
+                className='view-density-deadline-date-full font-medium text-slate-900 dark:text-slate-100'
+                dateTime={
+                  effectiveDeadline instanceof Date
+                    ? effectiveDeadline.toISOString()
+                    : effectiveDeadline
+                }>
+                {formattedDeadlineFull}
+              </time>
+
+              {/* Deadline badge - hidden in list view */}
               {!item.is_archived && item.status !== 'DELIVERED' && (
-                <DeadlineBadge
-                  computedDeadline={item.computed_deadline}
-                  customDeadline={item.custom_deadline}
-                  userTimezone={userTimezone}
-                />
+                <div className='view-density-deadline-badge'>
+                  <DeadlineBadge
+                    computedDeadline={item.computed_deadline}
+                    customDeadline={item.custom_deadline}
+                    userTimezone={userTimezone}
+                  />
+                </div>
               )}
             </div>
 
             {/* Delivered Date (shown for delivered items) */}
             {item.status === 'DELIVERED' && item.delivered_at && (
-              <div className="flex items-center gap-2 text-sm text-green-700 dark:text-green-400">
-                <CheckCircle2Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
+              <div className='flex items-center gap-2 text-sm text-green-700 dark:text-green-400'>
+                <CheckCircle2Icon
+                  className='h-4 w-4 shrink-0'
+                  aria-hidden='true'
+                />
                 <span>
                   Delivered on{' '}
                   <time
@@ -154,8 +190,7 @@ export function ItemCard({
                       typeof item.delivered_at === 'string'
                         ? item.delivered_at
                         : item.delivered_at.toISOString()
-                    }
-                  >
+                    }>
                     {formatDeadline(item.delivered_at, userTimezone)}
                   </time>
                 </span>
@@ -166,25 +201,24 @@ export function ItemCard({
 
         {/* Notes Section */}
         {item.notes && (
-          <CardContent className="view-density-content pt-0 flex-1">
-            <div className="view-density-notes text-sm text-slate-600 dark:text-slate-400">
+          <CardContent className='view-density-content pt-0 flex-1'>
+            <div className='view-density-notes text-sm text-slate-600 dark:text-slate-400'>
               {item.notes}
             </div>
           </CardContent>
         )}
 
         {/* Action Buttons */}
-        <CardFooter className="view-density-footer gap-2">
+        <CardFooter className='view-density-footer gap-2'>
           {/* Deliver button - only for non-archived, non-delivered items */}
           {!item.is_archived && item.status !== 'DELIVERED' && onDeliver && (
             <Button
-              size="sm"
-              variant="default"
+              size='sm'
+              variant='default'
               onClick={() => onDeliver(item)}
-              className="flex items-center gap-1"
-              aria-label={`Mark ${item.client_name} as delivered`}
-            >
-              <CheckCircle2Icon className="h-4 w-4" aria-hidden="true" />
+              className='flex items-center gap-1'
+              aria-label={`Mark ${item.client_name} as delivered`}>
+              <CheckCircle2Icon className='h-4 w-4' aria-hidden='true' />
               Deliver
             </Button>
           )}
@@ -192,13 +226,12 @@ export function ItemCard({
           {/* Archive button - only for non-archived items */}
           {!item.is_archived && onArchive && (
             <Button
-              size="sm"
-              variant="outline"
+              size='sm'
+              variant='outline'
               onClick={() => onArchive(item)}
-              className="flex items-center gap-1"
-              aria-label={`Archive ${item.client_name}`}
-            >
-              <ArchiveIcon className="h-4 w-4" aria-hidden="true" />
+              className='flex items-center gap-1'
+              aria-label={`Archive ${item.client_name}`}>
+              <ArchiveIcon className='h-4 w-4' aria-hidden='true' />
               Archive
             </Button>
           )}
@@ -206,13 +239,12 @@ export function ItemCard({
           {/* Unarchive button - only for archived items */}
           {item.is_archived && onUnarchive && (
             <Button
-              size="sm"
-              variant="outline"
+              size='sm'
+              variant='outline'
               onClick={() => onUnarchive(item)}
-              className="flex items-center gap-1"
-              aria-label={`Unarchive ${item.client_name}`}
-            >
-              <ArchiveRestoreIcon className="h-4 w-4" aria-hidden="true" />
+              className='flex items-center gap-1'
+              aria-label={`Unarchive ${item.client_name}`}>
+              <ArchiveRestoreIcon className='h-4 w-4' aria-hidden='true' />
               Unarchive
             </Button>
           )}
@@ -220,13 +252,12 @@ export function ItemCard({
           {/* Edit button */}
           {onEdit && (
             <Button
-              size="sm"
-              variant="ghost"
+              size='sm'
+              variant='ghost'
               onClick={() => onEdit(item)}
-              className="flex items-center gap-1 ml-auto"
-              aria-label={`Edit delivery item for ${item.client_name}`}
-            >
-              <Edit2Icon className="h-4 w-4" aria-hidden="true" />
+              className='flex items-center gap-1 ml-auto'
+              aria-label={`Edit delivery item for ${item.client_name}`}>
+              <Edit2Icon className='h-4 w-4' aria-hidden='true' />
               Edit
             </Button>
           )}
@@ -234,13 +265,12 @@ export function ItemCard({
           {/* Delete button */}
           {onDelete && (
             <Button
-              size="sm"
-              variant="ghost"
+              size='sm'
+              variant='ghost'
               onClick={() => onDelete(item)}
-              className="flex items-center gap-1 text-destructive hover:text-destructive hover:bg-destructive/10"
-              aria-label={`Delete ${item.client_name}`}
-            >
-              <Trash2Icon className="h-4 w-4" aria-hidden="true" />
+              className='flex items-center gap-1 text-destructive hover:text-destructive hover:bg-destructive/10'
+              aria-label={`Delete ${item.client_name}`}>
+              <Trash2Icon className='h-4 w-4' aria-hidden='true' />
             </Button>
           )}
         </CardFooter>
