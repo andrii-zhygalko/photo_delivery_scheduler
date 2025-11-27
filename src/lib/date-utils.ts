@@ -40,6 +40,21 @@ export function formatShortDate(utcDate: Date | string, userTimezone: string): s
 }
 
 /**
+ * Format deadline as full date for list view: "26 November 2025"
+ *
+ * @param utcDeadline - UTC timestamp (Date or ISO string)
+ * @param userTimezone - IANA timezone name (e.g., 'Europe/Rome')
+ * @returns Formatted date string like "26 November 2025"
+ */
+export function formatDeadlineFull(
+  utcDeadline: Date | string,
+  userTimezone: string
+): string {
+  const dt = toDateTime(utcDeadline).setZone(userTimezone);
+  return dt.toFormat('d MMMM yyyy');
+}
+
+/**
  * Calculates days remaining until deadline (or days overdue if past)
  * @param utcDeadline - ISO 8601 UTC timestamp string or Date object
  * @param userTimezone - IANA timezone name
