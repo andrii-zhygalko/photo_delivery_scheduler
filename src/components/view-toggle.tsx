@@ -1,10 +1,10 @@
 'use client';
 
 import { useEffect, useRef, useCallback } from 'react';
-import { LayoutGrid, List } from 'lucide-react';
+import { LayoutGrid, List, Rows3 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-type ViewDensity = 'full' | 'compact';
+type ViewDensity = 'full' | 'compact' | 'list';
 
 const STORAGE_KEY = 'pds:view-density';
 
@@ -37,6 +37,7 @@ interface ViewToggleProps {
 export function ViewToggle({ className }: ViewToggleProps) {
   const fullButtonRef = useRef<HTMLButtonElement>(null);
   const compactButtonRef = useRef<HTMLButtonElement>(null);
+  const listButtonRef = useRef<HTMLButtonElement>(null);
 
   // Update aria-checked after mount (to match visual state)
   // This is the ONLY useEffect - just for accessibility, not styling
@@ -44,8 +45,12 @@ export function ViewToggle({ className }: ViewToggleProps) {
     function updateAria() {
       const isCompact =
         document.documentElement.classList.contains('view-compact');
-      fullButtonRef.current?.setAttribute('aria-checked', String(!isCompact));
+      const isList = document.documentElement.classList.contains('view-list');
+      const isFull = !isCompact && !isList;
+
+      fullButtonRef.current?.setAttribute('aria-checked', String(isFull));
       compactButtonRef.current?.setAttribute('aria-checked', String(isCompact));
+      listButtonRef.current?.setAttribute('aria-checked', String(isList));
     }
 
     updateAria();
@@ -71,11 +76,14 @@ export function ViewToggle({ className }: ViewToggleProps) {
       console.warn('Failed to save view density:', e);
     }
 
-    // Update DOM class - CSS will immediately reflect this
+    // Remove all view classes first
+    document.documentElement.classList.remove('view-compact', 'view-list');
+
+    // Add appropriate class (full = no class)
     if (newDensity === 'compact') {
       document.documentElement.classList.add('view-compact');
-    } else {
-      document.documentElement.classList.remove('view-compact');
+    } else if (newDensity === 'list') {
+      document.documentElement.classList.add('view-list');
     }
   }, []);
 
@@ -121,6 +129,24 @@ export function ViewToggle({ className }: ViewToggleProps) {
         )}>
         <List className='h-4 w-4 shrink-0' aria-hidden='true' />
         <span className='hidden sm:inline'>Compact</span>
+      </button>
+
+      {/* List View Button - styling controlled by CSS classes */}
+      <button
+        ref={listButtonRef}
+        type='button'
+        role='radio'
+        aria-checked='false'
+        aria-label='List view - minimal single-row layout'
+        onClick={() => handleDensityChange('list')}
+        className={cn(
+          'view-toggle-btn view-toggle-list',
+          'flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-sm font-medium cursor-pointer',
+          'transition-all duration-200 ease-out',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1'
+        )}>
+        <Rows3 className='h-4 w-4 shrink-0' aria-hidden='true' />
+        <span className='hidden sm:inline'>List</span>
       </button>
     </div>
   );
