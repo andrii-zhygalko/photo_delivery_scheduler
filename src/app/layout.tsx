@@ -45,6 +45,7 @@ export const viewport = {
  * This script runs BEFORE React hydrates to:
  * 1. Read the user's saved view density preference from localStorage
  * 2. Add the 'view-compact' class to <html> if preference is 'compact'
+ * 3. Add the 'view-list' class to <html> if preference is 'list'
  *
  * WHY THIS APPROACH:
  * - Script executes synchronously before first paint (<1ms)
@@ -57,7 +58,7 @@ export const viewport = {
  * - Tailwind CSS dark mode
  * - Many production apps
  */
-const viewDensityScript = `(function(){try{if(localStorage.getItem('pds:view-density')==='compact'){document.documentElement.classList.add('view-compact')}}catch(e){}})();`;
+const viewDensityScript = `(function(){try{var d=localStorage.getItem('pds:view-density');if(d==='compact'){document.documentElement.classList.add('view-compact')}else if(d==='list'){document.documentElement.classList.add('view-list')}}catch(e){}})();`;
 
 export default function RootLayout({
   children,

@@ -6,8 +6,9 @@ import { useSyncExternalStore, useCallback } from 'react';
  * View density options:
  * - 'full': Spacious layout with all elements visible (default)
  * - 'compact': Condensed layout with smaller spacing and hidden action buttons
+ * - 'list': Minimal single-row layout with only client name and deadline
  */
-export type ViewDensity = 'full' | 'compact';
+export type ViewDensity = 'full' | 'compact' | 'list';
 
 const STORAGE_KEY = 'pds:view-density';
 
@@ -31,9 +32,13 @@ function notifySubscribers(): void {
  * This is the "external store" that React syncs with
  */
 function getSnapshot(): ViewDensity {
-  return document.documentElement.classList.contains('view-compact')
-    ? 'compact'
-    : 'full';
+  if (document.documentElement.classList.contains('view-compact')) {
+    return 'compact';
+  }
+  if (document.documentElement.classList.contains('view-list')) {
+    return 'list';
+  }
+  return 'full';
 }
 
 /**
