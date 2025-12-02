@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import localFont from 'next/font/local';
 import { Toaster } from 'sonner';
 import { PWARegister } from '@/components/pwa-register';
+import { ThemeProvider } from '@/components/theme-provider';
 import './globals.css';
 
 const geistSans = Geist({
@@ -75,9 +76,11 @@ export default function RootLayout({
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${poetsenOne.variable} antialiased`}>
-        <PWARegister />
-        {children}
-        <Toaster position="top-center" />
+        <ThemeProvider>
+          <PWARegister />
+          {children}
+          <Toaster position="top-center" />
+        </ThemeProvider>
       </body>
     </html>
   );

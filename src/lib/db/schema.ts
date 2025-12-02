@@ -39,6 +39,7 @@ export const userSettings = pgTable('user_settings', {
     .notNull()
     .default(30),
   timezone: text('timezone').notNull().default('UTC'), // IANA timezone name
+  theme_mode: text('theme_mode').notNull().default('system'),
   created_at: timestamp('created_at', { withTimezone: true })
     .defaultNow()
     .notNull(),
@@ -94,3 +95,6 @@ export type OptimisticAction =
   | { type: 'delete'; itemId: string }
   | { type: 'add'; item: DeliveryItem }
   | { type: 'update'; itemId: string; updates: Partial<DeliveryItem> };
+
+// Theme mode type
+export type ThemeMode = 'light' | 'dark' | 'system';
