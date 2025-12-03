@@ -23,6 +23,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
+import { ThemeSelector } from './theme-selector';
 import type { UserSettings } from '@/lib/db/schema';
 
 interface SettingsFormProps {
@@ -46,6 +47,7 @@ export function SettingsForm({
     defaultValues: {
       default_deadline_days: currentSettings.default_deadline_days,
       timezone: currentSettings.timezone,
+      theme_mode: (currentSettings.theme_mode || 'system') as 'light' | 'dark' | 'system',
       applyToExisting: false,
     },
   });
@@ -113,6 +115,28 @@ export function SettingsForm({
               <FormDescription>
                 Detected: {getTimezoneDisplayName(detectedTimezone)} • Deadlines
                 will be at 23:59 in this timezone
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {/* Theme Mode */}
+        <FormField
+          control={form.control}
+          name="theme_mode"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Theme</FormLabel>
+              <FormControl>
+                <ThemeSelector
+                  value={field.value}
+                  onChange={field.onChange}
+                  disabled={isPending}
+                />
+              </FormControl>
+              <FormDescription>
+                Choose your preferred color scheme. &quot;System&quot; follows your device settings.
               </FormDescription>
               <FormMessage />
             </FormItem>

@@ -48,6 +48,7 @@ export function SettingsPageClient({
         const formData = new FormData();
         formData.append('default_deadline_days', data.default_deadline_days.toString());
         formData.append('timezone', data.timezone);
+        formData.append('theme_mode', data.theme_mode);
         formData.append('applyToExisting', data.applyToExisting.toString());
 
         const result = await updateSettingsAction(formData);
