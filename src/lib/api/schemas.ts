@@ -92,18 +92,21 @@ export const updateSettingsSchema = z
       .max(365, 'Must be at most 365 days')
       .optional(),
     timezone: z.string().min(1, 'Timezone cannot be empty').optional(),
+    theme_mode: z.enum(['light', 'dark', 'system']).optional(),
     applyToExisting: z.boolean().default(false),
   })
   .refine(
     (data) => {
       // At least one setting field must be provided
       return (
-        data.default_deadline_days !== undefined || data.timezone !== undefined
+        data.default_deadline_days !== undefined ||
+        data.timezone !== undefined ||
+        data.theme_mode !== undefined
       );
     },
     {
       message:
-        'At least one setting must be provided (default_deadline_days or timezone)',
+        'At least one setting must be provided (default_deadline_days, timezone, or theme_mode)',
     }
   );
 

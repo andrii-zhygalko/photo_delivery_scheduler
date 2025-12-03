@@ -70,6 +70,8 @@ export const settingsFormSchema = z.object({
 
   timezone: z.string().min(1, 'Timezone is required'),
 
+  theme_mode: z.enum(['light', 'dark', 'system']),
+
   applyToExisting: z.boolean(),
 });
 
