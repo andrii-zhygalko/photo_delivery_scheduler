@@ -31,6 +31,27 @@ export function ThemeSelector({ value, onChange, disabled }: ThemeSelectorProps)
     onChange(newTheme); // Update form state for database sync
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent, currentValue: string) => {
+    const currentIndex = themeOptions.findIndex((o) => o.value === currentValue);
+
+    switch (e.key) {
+      case 'ArrowLeft':
+      case 'ArrowUp': {
+        e.preventDefault();
+        const prevIndex = currentIndex > 0 ? currentIndex - 1 : themeOptions.length - 1;
+        handleChange(themeOptions[prevIndex].value);
+        break;
+      }
+      case 'ArrowRight':
+      case 'ArrowDown': {
+        e.preventDefault();
+        const nextIndex = currentIndex < themeOptions.length - 1 ? currentIndex + 1 : 0;
+        handleChange(themeOptions[nextIndex].value);
+        break;
+      }
+    }
+  };
+
   // Show skeleton during SSR
   if (!mounted) {
     return (
@@ -63,6 +84,7 @@ export function ThemeSelector({ value, onChange, disabled }: ThemeSelectorProps)
             aria-checked={isSelected}
             disabled={disabled}
             onClick={() => handleChange(option.value)}
+            onKeyDown={(e) => handleKeyDown(e, value)}
             className={cn(
               // Base styles
               'flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-md border',
