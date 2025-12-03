@@ -34,6 +34,9 @@ export async function updateSettingsAction(
       timezone: formData.get('timezone')
         ? (formData.get('timezone') as string)
         : undefined,
+      theme_mode: formData.get('theme_mode')
+        ? (formData.get('theme_mode') as string)
+        : undefined,
       applyToExisting: formData.get('applyToExisting') === 'true',
     };
 
@@ -68,6 +71,7 @@ export async function updateSettingsAction(
               ? validated.default_deadline_days
               : undefined,
           timezone: validated.timezone !== undefined ? validated.timezone : undefined,
+          theme_mode: validated.theme_mode !== undefined ? validated.theme_mode : undefined,
           updated_at: new Date(),
         })
         .where(eq(userSettings.user_id, userId));
