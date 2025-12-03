@@ -507,50 +507,63 @@
 
 /* Default state (Full view): Full button is active */
 .view-toggle-full {
-  background-color: hsl(var(--background));
-  color: hsl(var(--foreground));
-  border: 1px solid hsl(var(--border));
+  background-color: var(--background);
+  color: var(--foreground);
+  /* border: 1px solid var(--border); */
   box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.2), 0 1px 2px 0 rgb(0 0 0 / 0.06);
   font-weight: 600;
 }
 
+.dark .view-toggle-full {
+  background-color: var(--muted);
+  /* border-color: var(--border); */
+}
+
 .view-toggle-compact {
   background-color: transparent;
-  color: hsl(var(--muted-foreground));
-  border: 1px solid transparent;
+  color: var(--muted-foreground);
+  /* border: 1px solid transparent; */
   font-weight: 500;
 }
 
 .view-toggle-compact:hover {
-  color: hsl(var(--foreground));
-  background-color: hsl(var(--muted) / 0.5);
+  color: var(--foreground);
+  background-color: color-mix(in oklch, var(--muted), transparent 50%);
 }
 
 /* Compact mode (.view-compact on <html>): Compact button is active */
 .view-compact .view-toggle-full {
   background-color: transparent;
-  color: hsl(var(--muted-foreground));
+  color: var(--muted-foreground);
   /* border: 1px solid transparent; */
   box-shadow: none;
   font-weight: 500;
 }
 
 .view-compact .view-toggle-full:hover {
-  color: hsl(var(--foreground));
-  background-color: hsl(var(--muted) / 0.5);
+  color: var(--foreground);
+  background-color: color-mix(in oklch, var(--muted), transparent 50%);
 }
 
 .view-compact .view-toggle-compact {
-  background-color: hsl(var(--background));
-  color: hsl(var(--foreground));
-  /* border: 1px solid hsl(var(--border)); */
+  background-color: var(--background);
+  color: var(--foreground);
+  /* border: 1px solid var(--border); */
   box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.2), 0 1px 2px 0 rgb(0 0 0 / 0.06);
   font-weight: 600;
 }
 
+.dark.view-compact .view-toggle-compact {
+  background-color: var(--muted);
+}
+
 .view-compact .view-toggle-compact:hover {
-  background-color: hsl(var(--background));
-  color: hsl(var(--foreground));
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+.dark.view-compact .view-toggle-compact:hover {
+  background-color: var(--muted);
 }
 
 /* =====================================================================
@@ -560,68 +573,77 @@
 /* Default state (Full view): List button is inactive */
 .view-toggle-list {
   background-color: transparent;
-  color: hsl(var(--muted-foreground));
+  color: var(--muted-foreground);
   /* border: 1px solid transparent; */
   font-weight: 500;
 }
 
 .view-toggle-list:hover {
-  color: hsl(var(--foreground));
-  background-color: hsl(var(--muted) / 0.5);
+  color: var(--foreground);
+  background-color: color-mix(in oklch, var(--muted), transparent 50%);
 }
 
 /* Compact mode: List button stays inactive */
 .view-compact .view-toggle-list {
   background-color: transparent;
-  color: hsl(var(--muted-foreground));
+  color: var(--muted-foreground);
   /* border: 1px solid transparent; */
   font-weight: 500;
 }
 
 .view-compact .view-toggle-list:hover {
-  color: hsl(var(--foreground));
-  background-color: hsl(var(--muted) / 0.5);
+  color: var(--foreground);
+  background-color: color-mix(in oklch, var(--muted), transparent 50%);
 }
 
 /* List mode: Full button becomes inactive */
 .view-list .view-toggle-full {
   background-color: transparent;
-  color: hsl(var(--muted-foreground));
+  color: var(--muted-foreground);
   box-shadow: none;
   font-weight: 500;
 }
 
 .view-list .view-toggle-full:hover {
-  color: hsl(var(--foreground));
-  background-color: hsl(var(--muted) / 0.5);
+  color: var(--foreground);
+  background-color: color-mix(in oklch, var(--muted), transparent 50%);
 }
 
 /* List mode: Compact button becomes inactive */
 .view-list .view-toggle-compact {
   background-color: transparent;
-  color: hsl(var(--muted-foreground));
-  border: 1px solid transparent;
+  color: var(--muted-foreground);
+  /* border: 1px solid transparent; */
   box-shadow: none;
   font-weight: 500;
 }
 
 .view-list .view-toggle-compact:hover {
-  color: hsl(var(--foreground));
-  background-color: hsl(var(--muted) / 0.5);
+  color: var(--foreground);
+  background-color: color-mix(in oklch, var(--muted), transparent 50%);
 }
 
 /* List mode: List button is active */
 .view-list .view-toggle-list {
-  background-color: hsl(var(--background));
-  color: hsl(var(--foreground));
-  border: 1px solid hsl(var(--border));
+  background-color: var(--background);
+  color: var(--foreground);
+  /* border: 1px solid var(--border); */
   box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.2), 0 1px 2px 0 rgb(0 0 0 / 0.06);
   font-weight: 600;
 }
 
+.dark.view-list .view-toggle-list {
+  background-color: var(--muted);
+  /* border-color: var(--border); */
+}
+
 .view-list .view-toggle-list:hover {
-  background-color: hsl(var(--background));
-  color: hsl(var(--foreground));
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+.dark.view-list .view-toggle-list:hover {
+  background-color: var(--muted);
 }
 
 /* =====================================================================
