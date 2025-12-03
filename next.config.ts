@@ -55,7 +55,7 @@ const nextConfig: NextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self'",
+            value: "default-src 'self'; script-src 'self'; connect-src 'self' https://lh3.googleusercontent.com; img-src 'self' https://lh3.googleusercontent.com data:",
           },
         ],
       },
