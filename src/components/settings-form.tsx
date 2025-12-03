@@ -121,27 +121,7 @@ export function SettingsForm({
           )}
         />
 
-        {/* Theme Mode */}
-        <FormField
-          control={form.control}
-          name="theme_mode"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Theme</FormLabel>
-              <FormControl>
-                <ThemeSelector
-                  value={field.value}
-                  onChange={field.onChange}
-                  disabled={isPending}
-                />
-              </FormControl>
-              <FormDescription>
-                Choose your preferred color scheme. &quot;System&quot; follows your device settings.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+
 
         {/* Apply to Existing Items */}
         <FormField
@@ -184,6 +164,28 @@ export function SettingsForm({
             </p>
           </div>
         )}
+
+        {/* Theme Mode */}
+        <FormField
+          control={form.control}
+          name="theme_mode"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Theme</FormLabel>
+              <FormControl>
+                <ThemeSelector
+                  value={field.value}
+                  onChange={field.onChange}
+                  disabled={isPending}
+                />
+              </FormControl>
+              <FormDescription>
+                Choose your preferred color scheme. &quot;System&quot; follows your device settings.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         {/* Submit Button */}
         <div className="flex gap-3">
