@@ -31,6 +31,19 @@ export const metadata: Metadata = {
     statusBarStyle: 'default',
     title: 'PhotoDelivery',
   },
+  openGraph: {
+    title: 'Photo Delivery Scheduler',
+    description: 'Web app to help photographers track delivery deadlines',
+    url: 'https://pds.devino.dev',
+    siteName: 'Photo Delivery Scheduler',
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Photo Delivery Scheduler',
+    description: 'Web app to help photographers track delivery deadlines',
+  },
 };
 
 export const viewport = {
