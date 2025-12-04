@@ -38,6 +38,11 @@ export const viewport = {
   initialScale: 1,
   maximumScale: 5,
   userScalable: true,
+  // Tell Samsung Internet that this site supports dark mode natively.
+  // Without this, Samsung Internet ignores prefers-color-scheme and applies
+  // its own forced dark mode transformation instead of our CSS dark theme.
+  // See: https://developer.samsung.com/internet/blog/en/2020/12/15/dark-mode-in-samsung-internet
+  colorScheme: 'light dark',
 };
 
 /**
