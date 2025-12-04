@@ -79,10 +79,12 @@ export function ItemCard({
       className={cn(
         // Base styles
         'bg-gradient-card-border rounded-lg',
+        // Full height to match tallest card in grid row
+        // 'h-full',
         // View density wrapper (controlled by CSS)
         'view-density-wrapper',
         // Hover effects
-        'hover:shadow-xl hover:shadow-purple-500/20 transition-shadow duration-200',
+        'hover:shadow-lg hover:shadow-purple-500/20 transition-shadow duration-200',
         // 'group' class enables .group:hover selectors for compact mode
         'group',
         // Optimistic update feedback

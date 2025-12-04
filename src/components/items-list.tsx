@@ -57,12 +57,11 @@ export function ItemsList({
 
   return (
     <ul
-      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 animate-cards-container-enter"
-      role="list"
-      aria-label="Delivery items"
-    >
-      <AnimatePresence mode="popLayout">
-        {visibleItems.map((item) => (
+      className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 animate-cards-container-enter'
+      role='list'
+      aria-label='Delivery items'>
+      <AnimatePresence mode='popLayout'>
+        {visibleItems.map(item => (
           <motion.li
             key={item.id}
             // Layout animation for reordering/density changes
@@ -82,6 +81,8 @@ export function ItemsList({
                 damping: 30,
               },
             }}
+            // Stretch to fill grid cell height (matches row height to tallest card)
+            // className="h-full"
           >
             <ItemCard
               item={item}
