@@ -23,7 +23,6 @@ export default async function ItemsPage(props: ItemsPageProps) {
 
   const userId = session.user.id;
 
-  // Await searchParams (Next.js 15 requirement)
   const searchParams = await props.searchParams;
 
   // Parse filter values for passing to client components

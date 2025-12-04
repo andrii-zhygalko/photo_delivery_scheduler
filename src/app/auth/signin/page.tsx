@@ -66,7 +66,7 @@ export default function SignInPage() {
             </p>
           </div>
 
-          {/* Sign In Button with Google Logo */}
+          {/* Sign In Button */}
           <Button
             onClick={handleSignIn}
             disabled={isLoading}

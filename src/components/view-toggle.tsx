@@ -18,7 +18,7 @@ export function ViewToggle({ className }: ViewToggleProps) {
   const listButtonRef = useRef<HTMLButtonElement>(null);
 
   // Update aria-checked after mount (to match visual state)
-  // This is the ONLY useEffect - just for accessibility, not styling
+  // This useEffect is for accessibility, not styling
   useEffect(() => {
     function updateAria() {
       const isCompact =

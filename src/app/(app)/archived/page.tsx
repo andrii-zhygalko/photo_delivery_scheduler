@@ -21,7 +21,6 @@ export default async function ArchivedPage(props: ArchivedPageProps) {
 
   const userId = session.user.id;
 
-  // Await searchParams (Next.js 15 requirement)
   const searchParams = await props.searchParams;
 
   // Fetch data within RLS transaction
