@@ -75,7 +75,12 @@ export function SettingsForm({
                   min="1"
                   max="365"
                   {...field}
-                  onChange={(e) => field.onChange(Number(e.target.value))}
+                  value={field.value === 0 ? '' : field.value}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    // Allow empty field while typing, convert to number otherwise
+                    field.onChange(val === '' ? 0 : Number(val));
+                  }}
                   disabled={isPending}
                 />
               </FormControl>
