@@ -5,14 +5,6 @@ import { StatusPill } from '@/components/status-pill';
 import { DeadlineBadge } from '@/components/deadline-badge';
 import type { DeliveryItem } from '@/lib/db/schema';
 
-/**
- * Demo page for Phase 4 UI components
- * Visit /components-demo to see all components in action
- *
- * NOTE: This is a Client Component ('use client') because it passes
- * event handlers (onEdit, onDeliver, onArchive) to ItemCard.
- * In production, this pattern will be used in list views (Phase 5).
- */
 export default function ComponentsDemoPage() {
   // Sample delivery items for demo
   // NOTE: Using fixed dates to avoid hydration mismatch (Date.now() differs between server/client)
@@ -96,10 +88,10 @@ export default function ComponentsDemoPage() {
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-2">
-            Phase 4: UI Components Demo
+            UI Components Demo
           </h1>
           <p className="text-slate-600 dark:text-slate-400">
-            Testing StatusPill, DeadlineBadge, and ItemCard components with gradient borders
+            Preview of StatusPill, DeadlineBadge, and ItemCard components
           </p>
         </div>
 
