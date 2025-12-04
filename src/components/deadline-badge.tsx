@@ -9,16 +9,6 @@ interface DeadlineBadgeProps {
   className?: string;
 }
 
-/**
- * DeadlineBadge - Shows days remaining until deadline with urgency-based colors
- *
- * Color scheme:
- * - Overdue (< 0 days): Destructive red
- * - Due soon (1-3 days): Orange warning
- * - Normal (4+ days): Default gray
- *
- * Shows lightning bolt (⚡) when custom deadline is earlier than computed deadline
- */
 export function DeadlineBadge({
   computedDeadline,
   customDeadline,

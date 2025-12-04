@@ -8,16 +8,7 @@ interface StatusPillProps {
   className?: string;
 }
 
-/**
- * StatusPill - Color-coded badge for delivery item status
- *
- * Color scheme:
- * - TO_DO: Blue (new items)
- * - EDITING: Yellow (work in progress)
- * - DELIVERED: Green (completed)
- */
-
-// Status configuration with labels and descriptions for accessibility
+// Status configuration with labels and colors
 const statusConfig: Record<
   Status,
   { label: string; description: string; colors: string }

@@ -12,28 +12,6 @@ interface ViewToggleProps {
   className?: string;
 }
 
-/**
- * ViewToggle Fix
- *
- * PROBLEM WITH PREVIOUS VERSIONS:
- * - Used React state (`density === 'full'`) to determine button styling
- * - Server renders 'full', client might have 'compact' in localStorage
- * - React updates state after hydration → toggle flashes from Full to Compact
- *
- * SOLUTION:
- * - Button styling is 100% CSS-based (no React state)
- * - CSS selectors: `.view-toggle-full`, `.view-compact .view-toggle-full`
- * - Blocking script sets .view-compact on <html> before paint
- * - CSS immediately shows correct toggle state
- * - React only handles click events, not appearance
- *
- * HOW IT WORKS:
- * 1. Blocking script (in layout.tsx) adds .view-compact to <html> if needed
- * 2. CSS rules style buttons based on .view-compact presence
- * 3. This component just renders buttons with CSS classes
- * 4. Click handler updates: localStorage + DOM class
- * 5. CSS immediately reflects the change (no React re-render needed for styling)
- */
 export function ViewToggle({ className }: ViewToggleProps) {
   const fullButtonRef = useRef<HTMLButtonElement>(null);
   const compactButtonRef = useRef<HTMLButtonElement>(null);

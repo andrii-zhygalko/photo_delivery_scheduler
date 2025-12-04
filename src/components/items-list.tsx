@@ -17,24 +17,6 @@ interface ItemsListProps {
   onDelete?: (item: OptimisticDeliveryItem) => void;
 }
 
-/**
- * ItemsList - v6 (Final Fix)
- *
- * PROBLEM WITH PREVIOUS VERSIONS:
- * - CSS animation (.animate-card-enter) + Framer Motion (animate prop) conflicted
- * - Both tried to control opacity, causing flash on hydration
- *
- * SOLUTION:
- * - NO entrance animation at all (industry standard: Vercel, Linear, Notion)
- * - Framer Motion ONLY for exit animations (what it's actually good at)
- * - Cards just appear instantly on page load
- *
- * WHY NO ENTRANCE ANIMATION:
- * 1. SSR renders cards visible → user expects them to be there
- * 2. Adding entrance animation means: visible → invisible → animate in = FLASH
- * 3. Modern apps don't animate page load (slows perceived performance)
- * 4. Animation is for user-initiated changes (add/delete), not initial render
- */
 export function ItemsList({
   items,
   userTimezone,
@@ -81,8 +63,6 @@ export function ItemsList({
                 damping: 30,
               },
             }}
-            // Stretch to fill grid cell height (matches row height to tallest card)
-            // className="h-full"
           >
             <ItemCard
               item={item}

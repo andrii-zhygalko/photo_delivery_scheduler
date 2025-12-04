@@ -33,22 +33,6 @@ interface ItemCardProps {
   className?: string;
 }
 
-/**
- * ItemCard - Displays a delivery item with gradient border and hover effects
- *
- * Features:
- * - Purple/blue gradient border (p-[2px] wrapper technique)
- * - Gradient background (white to slate in light mode)
- * - Hover effect with purple shadow glow
- * - Sections: client name, dates, deadline, status, notes, actions
- * - Mobile-optimized spacing and touch targets
- *
- * VIEW DENSITY:
- * - Uses CSS utility classes (.view-density-*) for styling
- * - Styling controlled by .view-compact class on <html>
- * - NO JavaScript conditional rendering for density
- * - 'group' class enables hover effects for compact mode footer
- */
 export function ItemCard({
   item,
   userTimezone,
@@ -77,17 +61,10 @@ export function ItemCard({
     <div
       data-status={item.status}
       className={cn(
-        // Base styles
         'bg-gradient-card-border rounded-lg',
-        // Full height to match tallest card in grid row
-        // 'h-full',
-        // View density wrapper (controlled by CSS)
         'view-density-wrapper',
-        // Hover effects
         'hover:shadow-lg hover:shadow-purple-500/20 transition-shadow duration-200',
-        // 'group' class enables .group:hover selectors for compact mode
         'group',
-        // Optimistic update feedback
         isOptimistic && 'opacity-70',
         className
       )}>
