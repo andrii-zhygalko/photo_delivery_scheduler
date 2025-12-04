@@ -127,7 +127,7 @@ export function ViewToggle({ className }: ViewToggleProps) {
           'transition-all duration-200 ease-out',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1'
         )}>
-        <List className='h-4 w-4 shrink-0' aria-hidden='true' />
+        <Rows3 className='h-4 w-4 shrink-0' aria-hidden='true' />
         <span className='hidden sm:inline'>Compact</span>
       </button>
 
@@ -145,7 +145,7 @@ export function ViewToggle({ className }: ViewToggleProps) {
           'transition-all duration-200 ease-out',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1'
         )}>
-        <Rows3 className='h-4 w-4 shrink-0' aria-hidden='true' />
+        <List className='h-4 w-4 shrink-0' aria-hidden='true' />
         <span className='hidden sm:inline'>List</span>
       </button>
     </div>
