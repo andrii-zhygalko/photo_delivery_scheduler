@@ -60,8 +60,6 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       }
       if (validated.shoot_date !== undefined) {
         updateData.shoot_date = validated.shoot_date;
-        // Note: In Phase 3, trigger will recompute deadline
-        // For now, we'll leave deadline as-is
       }
       if (validated.notes !== undefined) {
         updateData.notes = validated.notes;

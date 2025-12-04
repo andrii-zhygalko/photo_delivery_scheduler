@@ -2,17 +2,12 @@ import { db } from '@/lib/db';
 import { userSettings, deliveryItems } from '@/lib/db/schema';
 import { eq, and, asc, desc } from 'drizzle-orm';
 
-/**
- * Fetch user settings (timezone, default_deadline_days)
- *
- * @param userId - User ID (UUID string)
- * @param tx - Optional database/transaction object (defaults to global db)
- * @returns User settings or undefined if not found
- */
+type DbTransaction = Parameters<Parameters<typeof db.transaction>[0]>[0];
+type DbOrTransaction = typeof db | DbTransaction;
+
 export async function getUserSettings(
   userId: string,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  tx: any = db
+  tx: DbOrTransaction = db
 ) {
   const [settings] = await tx
     .select()
@@ -22,19 +17,6 @@ export async function getUserSettings(
   return settings;
 }
 
-/**
- * Fetch delivery items for a user with optional filtering and sorting
- *
- * IMPORTANT: Must be called within a transaction with GUC context set
- * Example:
- *   await tx.execute(sql.raw(`SET LOCAL app.user_id = '${userId}'`));
- *   const items = await getItemsForUser(userId, filters, tx);
- *
- * @param userId - User ID (UUID string)
- * @param filters - Optional filters: status, sort field, order
- * @param tx - Optional database/transaction object (defaults to global db)
- * @returns Array of delivery items
- */
 export async function getItemsForUser(
   userId: string,
   filters?: {
@@ -43,8 +25,7 @@ export async function getItemsForUser(
     sort?: string;
     order?: 'asc' | 'desc';
   },
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  tx: any = db
+  tx: DbOrTransaction = db
 ) {
   // Build where conditions
   const conditions = [eq(deliveryItems.user_id, userId)];

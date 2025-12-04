@@ -95,10 +95,8 @@ export async function POST(request: NextRequest) {
         throw new Error('Unauthorized');
       }
 
-      // Simple deadline calculation (will be replaced by trigger in Phase 3)
-      // shoot_date + 30 days at 23:59:00
       const shootDate = new Date(validated.shoot_date);
-      const deadlineDays = 30; // TODO: Get from user_settings in Phase 3
+      const deadlineDays = 30;
       const computedDeadline = new Date(shootDate);
       computedDeadline.setDate(computedDeadline.getDate() + deadlineDays);
       computedDeadline.setHours(23, 59, 0, 0); // Set to 23:59:00
