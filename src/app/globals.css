@@ -342,18 +342,9 @@
   }
 }
 
-/* =====================================================================
-   VIEW DENSITY UTILITIES - v3
-
-   KEY CHANGES FROM v2:
-   1. Added CSS transitions for smooth density change animations
-   2. Transitions use transform/opacity where possible (GPU-accelerated)
-   3. Height transitions use max-height trick for smooth collapse
-   4. Respects prefers-reduced-motion
-   ===================================================================== */
-
+/* View Density Utilities */
 @layer components {
-  /* ===== VIEW DENSITY: FULL (Default) ===== */
+  /* Full view (default) */
 
   /* Card outer wrapper (gradient border) */
   .view-density-wrapper {
@@ -407,8 +398,7 @@
       padding 200ms ease-out;
   }
 
-  /* ===== VIEW DENSITY: COMPACT ===== */
-  /* These override the above when .view-compact is on <html> */
+  /* Compact view */
 
   .view-compact .view-density-wrapper {
     @apply p-px;
@@ -456,8 +446,7 @@
     @apply pt-2;
   }
 
-  /* ===== REDUCED MOTION ===== */
-  /* Respect user's motion preferences */
+  /* Reduced motion */
   @media (prefers-reduced-motion: reduce) {
     .view-density-header,
     .view-density-title,
@@ -471,12 +460,7 @@
   }
 }
 
-/* =====================================================================
-   CARDS CONTAINER ENTRANCE ANIMATION
-
-   Simple fade-in on the container (not individual cards).
-   This is safe because Framer Motion doesn't control the container's opacity.
-   ===================================================================== */
+/* Cards container entrance animation */
 @keyframes cards-container-enter {
   from {
     opacity: 0;
@@ -491,7 +475,6 @@
   opacity: 0;
 }
 
-/* Respect user's motion preferences */
 @media (prefers-reduced-motion: reduce) {
   .animate-cards-container-enter {
     animation: none;
@@ -499,13 +482,7 @@
   }
 }
 
-/* =====================================================================
-   VIEW TOGGLE BUTTON STYLING - v6
-
-   CSS-only toggle styling (no React state for appearance).
-   The blocking script sets .view-compact on <html> before paint.
-   These CSS rules immediately show the correct toggle state.
-   ===================================================================== */
+/* View Toggle Button Styling */
 
 /* Default state (Full view): Full button is active */
 .view-toggle-full {
@@ -568,11 +545,7 @@
   background-color: var(--muted);
 }
 
-/* =====================================================================
-   VIEW TOGGLE: LIST BUTTON STYLES
-   ===================================================================== */
-
-/* Default state (Full view): List button is inactive */
+/* List button styles */
 .view-toggle-list {
   background-color: transparent;
   color: var(--muted-foreground);
@@ -648,20 +621,7 @@
   background-color: var(--muted);
 }
 
-/* =====================================================================
-   LIST VIEW OVERRIDES - OUTSIDE @layer FOR SPECIFICITY
-
-   IMPORTANT: These rules MUST be outside @layer components.
-
-   In Tailwind CSS v4, @layer components has lower specificity than
-   utility classes. Elements like CardFooter have `flex` which would
-   override `display: none` if it were inside @layer components.
-
-   By placing these rules outside any @layer, they gain higher
-   specificity and properly hide elements without needing !important.
-   ===================================================================== */
-
-/* ----- ELEMENT HIDING ----- */
+/* List View Overrides (outside @layer for specificity) */
 
 html.view-list .view-density-status,
 html.view-list .view-density-shoot-date,
@@ -685,9 +645,7 @@ html.view-list .view-density-deadline-date-full {
   display: inline;
 }
 
-/* ----- STRUCTURAL OVERRIDES ----- */
-
-/* Single-column grid with tighter spacing */
+/* Structural overrides */
 html.view-list ul[role='list'] {
   display: grid;
   grid-template-columns: 1fr;
@@ -705,11 +663,6 @@ html.view-list .view-density-wrapper > .bg-gradient-card {
   gap: 0;
 }
 
-/*
- * Override CardHeader's grid layout with flexbox for horizontal row.
- * CardHeader defaults: grid auto-rows-min grid-rows-[auto_auto] items-start
- * Also has space-y-3 which adds margin-top to children - must reset!
- */
 html.view-list .view-density-header {
   display: flex;
   flex-direction: row;
@@ -719,13 +672,11 @@ html.view-list .view-density-header {
   padding: 0;
 }
 
-/* CRITICAL: Reset all margins from space-y-3 utility */
 html.view-list .view-density-header > * {
   margin-top: 0;
   margin-bottom: 0;
 }
 
-/* First child div contains title + status. Center contents. */
 html.view-list .view-density-header > div:first-child {
   display: flex;
   align-items: center;
@@ -734,7 +685,6 @@ html.view-list .view-density-header > div:first-child {
   gap: 0; /* Remove gap-2 utility */
 }
 
-/* Title - truncate and center vertically */
 html.view-list .view-density-title {
   font-size: 0.875rem;
   font-weight: 500;
@@ -746,19 +696,16 @@ html.view-list .view-density-title {
   line-height: 1.5;
 }
 
-/* Dates container - don't shrink, center contents */
 html.view-list .view-density-dates {
   flex-shrink: 0;
   display: flex;
   align-items: center;
 }
 
-/* DELIVERED ITEMS: Hide "Ship till" deadline, show "Delivered on" instead */
 html.view-list [data-status='DELIVERED'] .view-density-deadline {
   display: none;
 }
 
-/* Deadline row - horizontal, centered */
 html.view-list .view-density-deadline {
   display: flex;
   align-items: center;
@@ -767,7 +714,6 @@ html.view-list .view-density-deadline {
   line-height: 1.5;
 }
 
-/* ----- REDUCED MOTION ----- */
 @media (prefers-reduced-motion: reduce) {
   html.view-list .view-density-wrapper,
   html.view-list .view-density-header,
